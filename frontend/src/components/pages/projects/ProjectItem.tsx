@@ -1,0 +1,43 @@
+import type { Project } from '@/types/project';
+import React from 'react';
+
+interface ProjectItemProps {
+  project: Project;
+}
+
+const ProjectItem: React.FC<ProjectItemProps> = ({ project }) => (
+  <div className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-lg">
+    <div className="mb-5 flex items-start justify-between gap-4">
+      <div>
+        <div className="mb-3 h-2 w-20 rounded-full bg-indigo-500  " />
+        <h3 className="text-xl font-semibold text-slate-900 group-hover:text-indigo-700">
+          {project.title}
+        </h3>
+      </div>
+
+      <span className="shrink-0 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+        {project.status}
+      </span>
+
+    </div>
+
+    <p className="mb-4 line-clamp-3 text-sm leading-6 text-slate-600">
+      {project.description}
+    </p>
+
+    <p className="text-sm text-slate-600 mb-2 j">
+      Заказчик: {project.client}
+    </p>
+
+    <div className="flex items-center justify-between border-t border-slate-100 pt-4 text-sm">
+      <span className="text-slate-500">Бюджет</span>
+      <span className="font-semibold text-slate-900">{project.budgetTotal}</span>
+    </div>
+    <div className="flex items-center justify-between  pt-4 text-sm">
+      <span className="text-slate-500">Дедлайн</span>
+      <span className="font-semibold text-slate-900">{project.deadline}</span>
+    </div>
+  </div>
+);
+
+export default ProjectItem;
