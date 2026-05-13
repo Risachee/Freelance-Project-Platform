@@ -1,5 +1,6 @@
 import type { Project } from '@/types/project';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface ProjectItemProps {
   project: Project;
@@ -11,7 +12,12 @@ const ProjectItem: React.FC<ProjectItemProps> = ({ project }) => (
       <div>
         <div className="mb-3 h-2 w-20 rounded-full bg-indigo-500  " />
         <h3 className="text-xl font-semibold text-slate-900 group-hover:text-indigo-700">
-          {project.title}
+          <Link
+            to={`/projects/${project.id}`}
+            className="text-indigo-600 hover:text-indigo-800 hover:underline"
+          >
+            {project.title}
+          </Link>
         </h3>
       </div>
 

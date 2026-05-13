@@ -1,17 +1,47 @@
-import { useState } from 'react'
-import { Plus } from 'lucide-react'
-import InputType from '@/components/ui/InputType'
-import AddButton from '../../ui/AddButton'
-import BackButton from '../../ui/BackButton'
+import { useState } from 'react';
+import { Plus, User, Phone, Mail, Send, MessageSquare } from 'lucide-react';
+import Field from '@/components/ui/Field';
+import AddButton from '../../ui/AddButton';
+import BackButton from '../../ui/BackButton';
+import { useEditableForm } from '@/hooks/useEditableForm';
+import { useClients } from '@/context/ClientsContext';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from '@/components/ui/dialog';
+
+const emptyClient = {
+  id: 0,
+  name: '',
+  email: '',
+  phone: '',
+  telegram: '',
+  note: '',
+  projectsCount: 0,
+};
 
 export default function AddClientDialog() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
+  const { addClient } = useClients(); 
+
+  const {
+    formData,
+    handleChange,
+    handleSave,
+    handleReset
+  } = useEditableForm(emptyClient, (data) => {
+    console.log('Создаем клиента:', data);
+    addClient(data);
+    setOpen(false);
+    handleReset();
+  });
+
+  const closeDialog = () => {
+    setOpen(false);
+    handleReset();
+  };
 
   return (
     <>
@@ -19,52 +49,70 @@ export default function AddClientDialog() {
         Новый клиент
       </AddButton>
 
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={(val) => !val && closeDialog()}>
         <DialogContent className="sm:max-w-[600px] rounded-3xl p-9">
           <DialogHeader>
-            <DialogTitle>Добавление клиента</DialogTitle>
+            <DialogTitle className="text-xl font-semibold">Добавление клиента</DialogTitle>
           </DialogHeader>
 
-          <div className="grid gap-4 py-4">
-            <InputType
-              id="client-name"
-              textLabel="Фамилия Имя"
+          <div className="grid gap-5 py-6">
+            <Field
+              label="Фамилия Имя"
+              name="name"
               placeholder="Иванова Анна"
+              value={formData.name}
+              onChange={handleChange}
+              editing={true}
+              icon={<User size={16} className="text-slate-400" />}
             />
-            <InputType
-              id="client-phone"
-              textLabel="Номер телефона"
-              placeholder="+7(999)123-45-67"
-              pattern="^\+\d{1,3}\s\d{1,4}-\d{1,4}-\d{4}$"
+
+            <div className="grid grid-cols-2 gap-4">
+              <Field
+                label="Номер телефона"
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleChange}
+                editing={true}
+                icon={<Phone size={16} className="text-slate-400" />}
+              />
+              <Field
+                label="E-mail"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                editing={true}
+                icon={<Mail size={16} className="text-slate-400" />}
+              />
+            </div>
+
+            <Field
+              label="Telegram"
+              name="telegram"
+              value={formData.telegram}
+              onChange={handleChange}
+              editing={true}
+              icon={<Send size={16} className="text-slate-400" />}
             />
-            <InputType
-              id="client-email"
-              textLabel="E-mail"
-              type='email'
-              placeholder="index@mail.ru"
-            />
-            <InputType
-              id="client-telegram"
-              textLabel="Telegram"
-              placeholder="@name"
-            />
-            <InputType
-              id="client-note"
-              textLabel="Заметка"
-              placeholder="Предпочитает короткие созвоны по будням."
+
+            <Field
+              label="Комментарий"
+              name="note"
+              as="textarea"
+              value={formData.note}
+              onChange={handleChange}
+              editing={true}
+              icon={<MessageSquare size={16} className="text-slate-400" />}
             />
           </div>
 
-          <div className="flex justify-end gap-3">
-            <BackButton onClick={() => setOpen(false)}>
-              Отмена
-            </BackButton>
-            <AddButton onClick={() => setOpen(false)}>
-              Создать
-            </AddButton>
+          <div className="flex justify-end gap-3 mt-4">
+            <BackButton onClick={closeDialog}>Отмена</BackButton>
+            <AddButton onClick={handleSave}>Создать клиента</AddButton>
           </div>
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }

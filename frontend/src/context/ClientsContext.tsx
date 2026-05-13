@@ -8,7 +8,8 @@ type ClientContextType = {
     filteredClients: Client[]
     selectedClient: Client
     setSelectedClient: (value: Client) => void
-    onSave: () => void
+    addClient: (newClient: Client) => void
+    updateClient: (updatedClient: Client) => void
 }
 
 const ClientContext = createContext<ClientContextType | undefined>(undefined)
@@ -70,8 +71,18 @@ export const ClientProvider = ({ children }: { children: React.ReactNode }) => {
         c.name.toLowerCase().includes(search.toLowerCase()) ||
         c.note.toLowerCase().includes(search.toLowerCase())
     );
-    const onSave = ()=>{ console.log('save success')}
 
+    const addClient = (newClient: Client) => {
+
+        console.log('Client add in DB:', newClient);
+    };
+    const updateClient = (updatedClient: Client) => {
+        setClients((prev) =>
+            prev.map((c) => (c.id === updatedClient.id ? updatedClient : c))
+        );
+
+        console.log('Client updated in DB:', updatedClient);
+    };
     return (
         <ClientContext.Provider
             value={{
@@ -81,7 +92,8 @@ export const ClientProvider = ({ children }: { children: React.ReactNode }) => {
                 filteredClients,
                 selectedClient,
                 setSelectedClient,
-                onSave,
+                addClient,
+                updateClient,
             }}>
             {children}
         </ClientContext.Provider>

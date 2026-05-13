@@ -7,6 +7,7 @@ import ClientCard from './components/pages/clients/ClientCard';
 import { TasksProvider } from '@/context/TasksContext';
 import { ProjectProvider } from '@/context/ProjectContext';
 import { ClientProvider } from './context/ClientsContext';
+import ProjectCard from './components/pages/projects/ProjectCard';
 
 function App() {
   return (
@@ -39,9 +40,17 @@ function App() {
               </ClientProvider>
             }
           />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+          <Route
+            path="/projects/:id"
+            element={
+              <ProjectProvider>
+                <ProjectCard />
+              </ProjectProvider>
+            }
+          />
+      </Route>
+    </Routes>
+    </BrowserRouter >
   );
 }
 

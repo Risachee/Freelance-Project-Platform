@@ -2,12 +2,14 @@ import React, { createContext, useContext, useState } from 'react';
 import type { Project } from '@/types/project';
 
 type ProjectsContextType = {
-    projects: Project[];
-    filteredProjects: Project[];
-    activeFilter: string;
-    setActiveFilter: (value: string) => void;
-    search: string;
-    setSearch: (value : string) => void;
+  projects: Project[];
+  filteredProjects: Project[];
+  activeFilter: string;
+  setActiveFilter: (value: string) => void;
+  search: string;
+  setSearch: (value: string) => void;
+  addProject: (newProject: Project) => void
+  updateProject: (updatedProject: Project) => void
 };
 
 const ProjectsContext = createContext<ProjectsContextType | undefined>(undefined);
@@ -94,41 +96,56 @@ const initialProjects: Project[] = [
 ]
 
 export const ProjectProvider = ({ children }: { children: React.ReactNode }) => {
-    const [projects, setProjects] = useState<Project[]>(initialProjects)
+  const [projects, setProjects] = useState<Project[]>(initialProjects)
 
-    const [activeFilter, setActiveFilter] = useState('Все')
-    const [search, setSearch] = useState('')
-      const filteredProjects = projects.filter((project) => {
-        const matchStatus =
-          activeFilter === 'Все' || project.status === activeFilter
-    
-        const matchSearch = project.title
-          .toLowerCase()
-          .includes(search.toLowerCase())
-    
-        return matchStatus && matchSearch
-      })
+  const [activeFilter, setActiveFilter] = useState('Все')
+  const [search, setSearch] = useState('')
+  const filteredProjects = projects.filter((project) => {
+    const matchStatus =
+      activeFilter === 'Все' || project.status === activeFilter
 
-    return (
-        <ProjectsContext.Provider
-            value={{
-                projects,
-                filteredProjects,
-                activeFilter,
-                setActiveFilter,
-                search,
-                setSearch,
-            }}
-        >
-            {children}
-        </ProjectsContext.Provider>
+    const matchSearch = project.title
+      .toLowerCase()
+      .includes(search.toLowerCase())
+
+    return matchStatus && matchSearch
+  })
+
+
+  const addProject = (newProject: Project) => {
+
+    console.log('Project added:', newProject);
+  };
+
+  const updateProject = (updatedProject: Project) => {
+    setProjects((prev) =>
+      prev.map((p) => (p.id === updatedProject.id ? { ...updatedProject, updatedAt: new Date().toISOString().split('T')[0] } : p))
     );
+    console.log('Project updated:', updatedProject);
+  };
+
+  return (
+    <ProjectsContext.Provider
+      value={{
+        projects,
+        filteredProjects,
+        activeFilter,
+        setActiveFilter,
+        search,
+        setSearch,
+        addProject,
+        updateProject,
+      }}
+    >
+      {children}
+    </ProjectsContext.Provider>
+  );
 };
 
 export const useProjects = () => {
-    const context = useContext(ProjectsContext);
-    if (!context) {
-        throw new Error('useProjects must be used within ProjectsProvider');
-    }
-    return context;
+  const context = useContext(ProjectsContext);
+  if (!context) {
+    throw new Error('useProjects must be used within ProjectsProvider');
+  }
+  return context;
 };

@@ -7,7 +7,7 @@ import ClientProjects from './ClientProjects';
 
 export default function ClientCard() {
   const { id } = useParams();
-  const { clients, onSave } = useClients();
+  const { clients } = useClients();
   const { projects } = useProjects();
 
   const client = clients.find((item) => String(item.id) === id);
@@ -25,7 +25,7 @@ export default function ClientCard() {
       <BackPageButton />
 
       <div className="grid my-4 gap-4 md:grid-cols-2">
-        <ClientInfo onSave={onSave} client={client} />
+        <ClientInfo client={client} />
         <ClientProjects client={client} clientProjects={clientProjects}/>
       </div>
     </div>
