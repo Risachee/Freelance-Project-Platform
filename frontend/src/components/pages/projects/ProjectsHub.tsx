@@ -4,11 +4,10 @@ import Filtered from '@/components/ui/FilteredButton'
 import ProjectList from './ProjectList'
 import { useProjects } from '@/context/ProjectContext'
 import { ClientProvider } from '@/context/ClientsContext';
+import { statuses } from '@/types/project'
 
 export default function ProjectsHub() {
   const { activeFilter, setActiveFilter, search, setSearch, filteredProjects } = useProjects();
-
-  const statuses = ['Все', 'Обсуждение', 'В работе', 'На паузе', 'Завершен']
 
   return (
     <div>

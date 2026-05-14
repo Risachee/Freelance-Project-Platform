@@ -88,7 +88,7 @@ export default function AddTaskDialog() {
 
             <SelectField
               label="Проект"
-              value={getProjectById(formData.projectId)}
+              value={getProjectById(formData.projectId)?.title ?? ''}
               onValueChange={(val) => handleValueChange('projectId', val)}
               items={projects.map((project) => ({
                 value: project.title,

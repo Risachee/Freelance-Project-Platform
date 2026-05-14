@@ -2,6 +2,8 @@ export type TaskStatus = 'Активные' | 'Приостановленные'
 
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent'
 
+export const prioritys: TaskPriority[] = ['low', 'medium', 'high' , 'urgent']
+
 export interface Task {
   id: number
   projectId: number

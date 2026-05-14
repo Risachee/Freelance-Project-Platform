@@ -88,7 +88,6 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   }, [tasks, activeFilter]);
 
   const addTask = (newTask: Task) => {
-
     console.log('Client add in DB:', newTask);
   };
 
@@ -97,7 +96,7 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
       prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
     );
 
-    console.log('Client updated in DB:', updateTask);
+    console.log('Task updated in DB:', updateTask);
   };
 
   return (

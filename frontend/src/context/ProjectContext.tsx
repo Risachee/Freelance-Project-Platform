@@ -10,7 +10,7 @@ type ProjectsContextType = {
   setSearch: (value: string) => void;
   addProject: (newProject: Project) => void
   updateProject: (updatedProject: Project) => void
-  getProjectById: (id: number) => string
+  getProjectById: (id: number) => Project
 
 };
 
@@ -113,9 +113,11 @@ export const ProjectProvider = ({ children }: { children: React.ReactNode }) => 
     return matchStatus && matchSearch
   })
 
-  const getProjectById = (id: number) =>
-    projects.find(p => p.id === id)?.title ?? 'Не найдено';
-  
+
+  const getProjectById = (id: number ) => {
+    return projects.find(p => p.id === id);
+  };
+
   const addProject = (newProject: Project) => {
 
     console.log('Project added:', newProject);

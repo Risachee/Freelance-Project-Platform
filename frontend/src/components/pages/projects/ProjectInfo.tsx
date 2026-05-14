@@ -3,8 +3,9 @@ import Field from '@/components/ui/Field';
 import type { Project } from '@/types/project';
 import { useEditableForm } from '@/hooks/useEditableForm';
 import { useProjects } from '@/context/ProjectContext';
+import StatusBadge from '@/components/ui/StatusBage';
 
-const ProjectInfo = ({ project }: { project: Project }, ) => {
+const ProjectInfo = ({ project }: { project: Project },) => {
   const { updateProject } = useProjects();
   const {
     formData,
@@ -65,7 +66,7 @@ const ProjectInfo = ({ project }: { project: Project }, ) => {
           onChange={handleChange}
           placeholder="Имя клиента"
         />
-
+        
         <Field
           label="Дедлайн"
           editing={isEditing}
@@ -109,9 +110,12 @@ const ProjectInfo = ({ project }: { project: Project }, ) => {
         <p className="my-3 text-xs font-medium uppercase tracking-wide text-slate-500 text-right mr-3">
           Статус
         </p>
-        <span className="shrink-0 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 ">
-          {project.status}
-        </span>
+        <StatusBadge
+          status={project.status}
+          onStatusChange={(newStatus) => {
+            updateProject({ ...project, status: newStatus });
+          }}
+        />
       </div>
     </div>
   );

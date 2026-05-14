@@ -1,4 +1,5 @@
-type ProjectStatus = 'Обсуждение' | 'В работе' | 'На паузе' | 'Завершен'
+export type ProjectStatus = 'Обсуждение' | 'В работе' | 'На паузе' | 'Завершен'
+export const statuses: ProjectStatus[] = ['Обсуждение', 'В работе', 'На паузе', 'Завершен'];
 
 export interface Project {
   id: number

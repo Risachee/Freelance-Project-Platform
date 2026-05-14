@@ -7,10 +7,10 @@ import ProjectTasks from './ProjectTasks';
 
 export default function ProjectCard() {
   const { id } = useParams();
-  const { projects } = useProjects();
+  const { getProjectById } = useProjects();
   const {tasks} = useTasks();
 
-  const project = projects.find((item) => String(item.id) === id)
+  const project = getProjectById(Number(id))
   if (!project) {
     return <div className="p-6 text-slate-500">Проект не найден</div>;
   }
