@@ -4,10 +4,8 @@ import type { Project } from '@/types/project';
 import { useEditableForm } from '@/hooks/useEditableForm';
 import { useProjects } from '@/context/ProjectContext';
 
-
-
-const ProjectInfo = ({project}:{project:Project}) => {
-  const {updateProject} = useProjects();
+const ProjectInfo = ({ project }: { project: Project }, ) => {
+  const { updateProject } = useProjects();
   const {
     formData,
     isEditing,
@@ -105,6 +103,15 @@ const ProjectInfo = ({project}:{project:Project}) => {
           onChange={handleChange}
           as="textarea"
         />
+      </div>
+
+      <div className="mt-4 mb-3 grid justify-end ">
+        <p className="my-3 text-xs font-medium uppercase tracking-wide text-slate-500 text-right mr-3">
+          Статус
+        </p>
+        <span className="shrink-0 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 ">
+          {project.status}
+        </span>
       </div>
     </div>
   );

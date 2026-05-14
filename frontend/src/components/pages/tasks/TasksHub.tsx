@@ -5,6 +5,7 @@ import TaskList from './TaskList'
 import { useTasks } from '@/context/TasksContext';
 import { useState } from 'react';
 import { ProjectProvider } from '@/context/ProjectContext';
+import { TasksProvider } from '@/context/TasksContext';
 
 export default function TasksHub() {
   const { filteredTasks, activeFilter, setActiveFilter } = useTasks();
@@ -19,7 +20,9 @@ export default function TasksHub() {
         setSearch={setSearch}
         action={
           <ProjectProvider>
-            <AddTaskDialog />
+            <TasksProvider>
+              <AddTaskDialog />
+            </TasksProvider>
           </ProjectProvider>
         }
       />

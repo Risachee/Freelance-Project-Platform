@@ -7,62 +7,64 @@ type TasksContextType = {
   activeFilter: TaskStatus;
   setActiveFilter: (value: TaskStatus) => void;
   toggleTaskComplete: (id: string | number) => void;
+  addTask: (newTask: Task) => void;
+  updateTask: (updatedTask: Task) => void;
 };
 
 const TasksContext = createContext<TasksContextType | undefined>(undefined);
 
 const initialTasks: Task[] = [{
-  id: '1',
+  id: 1,
   title: 'Сделать страницу задач',
   description: 'Собрать красивую Kanban-логику.',
   status: 'Активные',
   priority: 'high',
   dueDate: '25 апр',
-  projectId: 'АК',
+  projectId: 1,
   completed: false,
   order: 2,
 },
 {
-  id: '2',
+  id: 2,
   title: 'Подключить фильтры',
   description: 'Показ задач по статусу.',
   status: 'Активные',
   priority: 'medium',
   dueDate: '27 апр',
-  projectId: 'МК',
+  projectId: 1,
   completed: false,
   order: 3,
 },
 {
-  id: '3',
+  id: 3,
   title: 'Drag and Drop',
   description: 'Сделать перетаскивание карточек.',
   status: 'Завершенные',
   priority: 'urgent',
   dueDate: '29 апр',
-  projectId: 'АК',
+  projectId: 2,
   completed: true,
   order: 1,
 },
 {
-  id: '4',
+  id: 4,
   title: 'Сверстать карточку Done',
   description: 'Проверить внешний вид завершённых задач.',
   status: 'Приостановленные',
   priority: 'low',
   dueDate: 'Вчера',
-  projectId: 'МК',
+  projectId: 3,
   completed: false,
   order: 4,
 },
 {
-  id: '5',
+  id: 5,
   title: 'Сверстать карточку Client',
   description: 'Проверить внешний вид завершённых задач.',
   status: 'Активные',
   priority: 'urgent',
   dueDate: 'Вчера',
-  projectId: 'МК',
+  projectId: 3,
   completed: false,
   order: 1,
 },];
@@ -85,6 +87,19 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
       .sort((a, b) => a.order - b.order)
   }, [tasks, activeFilter]);
 
+  const addTask = (newTask: Task) => {
+
+    console.log('Client add in DB:', newTask);
+  };
+
+  const updateTask = (updatedTask: Task) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
+    );
+
+    console.log('Client updated in DB:', updateTask);
+  };
+
   return (
     <TasksContext.Provider
       value={{
@@ -93,6 +108,8 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
         activeFilter,
         setActiveFilter,
         toggleTaskComplete,
+        updateTask,
+        addTask,
       }}
     >
       {children}

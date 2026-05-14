@@ -3,8 +3,8 @@ export type TaskStatus = 'Активные' | 'Приостановленные'
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent'
 
 export interface Task {
-  id: string
-  projectId: string
+  id: number
+  projectId: number
   title: string
   description?: string
   status: TaskStatus

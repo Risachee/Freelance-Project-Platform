@@ -44,12 +44,14 @@ function App() {
             path="/projects/:id"
             element={
               <ProjectProvider>
-                <ProjectCard />
+                <TasksProvider>
+                  <ProjectCard />
+                </TasksProvider>
               </ProjectProvider>
             }
           />
-      </Route>
-    </Routes>
+        </Route>
+      </Routes>
     </BrowserRouter >
   );
 }
