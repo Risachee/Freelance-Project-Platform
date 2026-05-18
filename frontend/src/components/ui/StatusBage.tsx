@@ -14,6 +14,7 @@ interface StatusBadgeProps {
 }
 
 const statusStyles: Record<ProjectStatus, string> = {
+  'Все': '',
   'Обсуждение': 'bg-blue-50 text-blue-700 hover:bg-blue-100',
   'В работе': 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100',
   'На паузе': 'bg-amber-50 text-amber-700 hover:bg-amber-100',
@@ -24,7 +25,7 @@ export default function StatusBadge({ status, onStatusChange }: StatusBadgeProps
   
   const badgeContent = (
     <span className={cn(
-      "inline-flex shrink-0 items-center rounded-full px-3 py-1 text-xs font-medium transition-colors cursor-default",
+      "inline-flex shrink-0 items-center rounded-full px-3 py-1 text-xs font-medium transition-colors cursor-default min-w-20",
       statusStyles[status],
        "cursor-pointer"
     )}>

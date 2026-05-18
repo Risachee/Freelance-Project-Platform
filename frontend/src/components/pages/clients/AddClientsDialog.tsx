@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Plus, User, Phone, Mail, Send, MessageSquare } from 'lucide-react';
 import Field from '@/components/ui/Field';
-import AddButton from '../../ui/AddButton';
-import BackButton from '../../ui/BackButton';
+
 import { useEditableForm } from '@/hooks/useEditableForm';
 import { useClients } from '@/context/ClientsContext';
 import {
@@ -11,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 const emptyClient = {
   id: 0,
@@ -24,7 +24,7 @@ const emptyClient = {
 
 export default function AddClientDialog() {
   const [open, setOpen] = useState(false);
-  const { addClient } = useClients(); 
+  const { addClient } = useClients();
 
   const {
     formData,
@@ -45,9 +45,10 @@ export default function AddClientDialog() {
 
   return (
     <>
-      <AddButton icon={<Plus size={18} />} onClick={() => setOpen(true)}>
+      <Button variant='indigo' onClick={() => setOpen(true)}>
+        <Plus size={18} />
         Новый клиент
-      </AddButton>
+      </Button>
 
       <Dialog open={open} onOpenChange={(val) => !val && closeDialog()}>
         <DialogContent className="sm:max-w-[600px] rounded-3xl p-9">
@@ -108,8 +109,12 @@ export default function AddClientDialog() {
           </div>
 
           <div className="flex justify-end gap-3 mt-4">
-            <BackButton onClick={closeDialog}>Отмена</BackButton>
-            <AddButton onClick={handleSave}>Создать клиента</AddButton>
+            <Button variant="secondary" onClick={closeDialog}>
+              Отмена
+            </Button>
+            <Button variant="indigo" onClick={handleSave}>
+              Создать проект
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

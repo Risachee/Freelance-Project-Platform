@@ -1,10 +1,10 @@
 import AddProjectDialog from './AddProjectDialog'
 import SectionHeader from '../SectionHeader'
-import Filtered from '@/components/ui/FilteredButton'
+import Filtered from '@/components/ui/Filtered'
 import ProjectList from './ProjectList'
 import { useProjects } from '@/context/ProjectContext'
 import { ClientProvider } from '@/context/ClientsContext';
-import { statuses } from '@/types/project'
+import { filter } from '@/types/project'
 
 export default function ProjectsHub() {
   const { activeFilter, setActiveFilter, search, setSearch, filteredProjects } = useProjects();
@@ -23,7 +23,7 @@ export default function ProjectsHub() {
         }/>
 
       <Filtered
-        filteredType={statuses}
+        filteredType={filter}
         activeFilter={activeFilter}
         setActiveFilter={setActiveFilter}
       />

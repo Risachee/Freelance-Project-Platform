@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { Plus, Folder, AlignLeft, Calendar, CircleDollarSign } from 'lucide-react';
-import AddButton from '../../ui/AddButton';
-import BackButton from '../../ui/BackButton';
 import {
   Dialog,
   DialogContent,
@@ -14,6 +12,7 @@ import { useEditableForm } from '@/hooks/useEditableForm';
 import Field from '@/components/ui/Field';
 import SelectField from '@/components/ui/SelectField';
 import type { Project } from '@/types/project';
+import { Button } from '@/components/ui/button';
 
 const emptyProject: Project = {
   id: 0,
@@ -52,9 +51,10 @@ export default function AddProjectDialog() {
 
   return (
     <>
-      <AddButton icon={<Plus size={18} />} onClick={() => setOpen(true)}>
+      <Button variant='indigo'onClick={() => setOpen(true)}>
+        <Plus size={18} />
         Новый проект
-      </AddButton>
+      </Button>
 
       <Dialog open={open} onOpenChange={(val) => !val && closeDialog()}>
         <DialogContent className="sm:max-w-[600px] rounded-3xl p-9">
@@ -120,12 +120,12 @@ export default function AddProjectDialog() {
           </div>
 
           <div className="flex justify-end gap-3 mt-4">
-            <BackButton onClick={closeDialog}>
+            <Button variant="secondary"  onClick={closeDialog}>
               Отмена
-            </BackButton>
-            <AddButton onClick={handleSave}>
+            </Button>
+            <Button variant="indigo" onClick={handleSave}>
               Создать проект
-            </AddButton>
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

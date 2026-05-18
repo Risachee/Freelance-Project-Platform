@@ -1,4 +1,4 @@
-import { Bell,  } from 'lucide-react';
+import { Bell , User } from 'lucide-react';
 
 export default function Header() {
   return (
@@ -8,7 +8,7 @@ export default function Header() {
         <button className="p-2 hover:bg-gray-100 rounded-xl">
           <Bell size={20} />
         </button>
-        <div className="w-8 h-8 bg-gray-300 rounded-full" />
+        <div className="w-10 h-10 bg-gray-300 rounded-full flex justify-center items-center"><User size={20} /></div>
       </div>
     </header>
   );

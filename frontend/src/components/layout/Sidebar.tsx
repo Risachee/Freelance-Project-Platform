@@ -3,7 +3,6 @@ import {
   LayoutDashboard, 
   FolderOpen, 
   Users, 
-  DollarSign, 
   Calendar 
 } from 'lucide-react';
 
@@ -12,7 +11,6 @@ const navItems = [
   { to: '/projects', icon: FolderOpen, label: 'Проекты' },
   { to: '/clients', icon: Users, label: 'Клиенты' },
   { to: '/tasks', icon: Calendar, label: 'Задачи' },
-  { to: '/finances', icon: DollarSign, label: 'Финансы' },
 ];
 
 export default function Sidebar() {
@@ -41,16 +39,6 @@ export default function Sidebar() {
           </NavLink>
         ))}
       </nav>
-
-      <div className="p-4 border-t">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-indigo-600 rounded-full" />
-          <div>
-            <p className="font-medium text-sm">Ты</p>
-            <p className="text-xs text-gray-500">Фрилансер</p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

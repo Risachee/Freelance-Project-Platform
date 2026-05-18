@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { Plus, Type, AlignLeft, Calendar, } from 'lucide-react';
 import Field from '@/components/ui/Field';
 import SelectField from '@/components/ui/SelectField';
-import AddButton from '../../ui/AddButton';
-import BackButton from '../../ui/BackButton';
 import {
   Dialog,
   DialogContent,
@@ -14,6 +12,7 @@ import { useProjects } from '@/context/ProjectContext';
 import { useTasks } from '@/context/TasksContext';
 import { useEditableForm } from '@/hooks/useEditableForm';
 import type { Task } from '@/types/task';
+import { Button } from '@/components/ui/button';
 
 const taskPriorities = ['low', 'medium', 'high', 'urgent']
 
@@ -31,32 +30,33 @@ const emptyTask: Task = {
 
 export default function AddTaskDialog() {
   const [open, setOpen] = useState(false);
-  const { projects,getProjectById } = useProjects();
-  const {addTask} = useTasks();
+  const { projects, getProjectById } = useProjects();
+  const { addTask } = useTasks();
 
   const {
-      formData,
-      handleChange,
-      handleSave,
-      handleValueChange,
-      handleReset,
-    } = useEditableForm(emptyTask, (data) => {
-      console.log('Создаем задачу:', data);
-      addTask(data);
-      setOpen(false);
-      handleReset();
-    });
-  
-    const closeDialog = () => {
-      setOpen(false);
-      handleReset();
-    };
+    formData,
+    handleChange,
+    handleSave,
+    handleValueChange,
+    handleReset,
+  } = useEditableForm(emptyTask, (data) => {
+    console.log('Создаем задачу:', data);
+    addTask(data);
+    setOpen(false);
+    handleReset();
+  });
+
+  const closeDialog = () => {
+    setOpen(false);
+    handleReset();
+  };
 
   return (
     <>
-      <AddButton icon={<Plus size={18} />} onClick={() => setOpen(true)}>
-        Новая задача
-      </AddButton>
+      <Button variant='indigo' onClick={() => setOpen(true)}>
+        <Plus size={18} />
+        Новая Задача
+      </Button>
 
       <Dialog open={open} onOpenChange={(val) => !val && closeDialog()}>
         <DialogContent className="sm:max-w-[600px] rounded-3xl p-9">
@@ -117,12 +117,12 @@ export default function AddTaskDialog() {
           </div>
 
           <div className="flex justify-end gap-3">
-            <BackButton onClick={closeDialog}>
+            <Button variant="secondary" onClick={closeDialog}>
               Отмена
-            </BackButton>
-            <AddButton onClick={handleSave}>
-              Создать задачу
-            </AddButton>
+            </Button>
+            <Button variant="indigo" onClick={handleSave}>
+              Создать проект
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

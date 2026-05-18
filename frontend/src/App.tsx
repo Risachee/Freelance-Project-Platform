@@ -8,16 +8,18 @@ import { TasksProvider } from '@/context/TasksContext';
 import { ProjectProvider } from '@/context/ProjectContext';
 import { ClientProvider } from './context/ClientsContext';
 import ProjectCard from './components/pages/projects/ProjectCard';
+import AuthScreen from './components/layout/AuthScreen';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={
+          <AuthProvider>
+            <AuthScreen />
+          </AuthProvider>} />
         <Route element={<Layout />}>
-          <Route path="/" element={
-            <ProjectProvider>
-              <ProjectsHub />
-            </ProjectProvider>} />
           <Route path="/projects" element={
             <ProjectProvider>
               <ProjectsHub />
