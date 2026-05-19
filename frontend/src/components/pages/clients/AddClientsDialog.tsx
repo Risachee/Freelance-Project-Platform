@@ -11,16 +11,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-
-const emptyClient = {
-  id: 0,
-  name: '',
-  email: '',
-  phone: '',
-  telegram: '',
-  note: '',
-  projectsCount: 0,
-};
+import type { Client } from '@/types/client';
 
 export default function AddClientDialog() {
   const [open, setOpen] = useState(false);
@@ -31,7 +22,7 @@ export default function AddClientDialog() {
     handleChange,
     handleSave,
     handleReset
-  } = useEditableForm(emptyClient, (data) => {
+  } = useEditableForm<Client>((data) => {
     console.log('Создаем клиента:', data);
     addClient(data);
     setOpen(false);

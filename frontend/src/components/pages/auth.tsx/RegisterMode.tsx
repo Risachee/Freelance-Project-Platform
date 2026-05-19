@@ -1,30 +1,35 @@
 import { Button } from "@/components/ui/button";
 import Field from "@/components/ui/Field";
 import { useAuth } from "@/context/AuthContext";
+import { useEditableForm } from "@/hooks/useEditableForm";
+import type { User } from "@/types/user";
 
 export default function () {
     const {
-        registerForm,
-        handleRegisterChange,
-        error,
         handleRegister,
     } = useAuth();
+    const {
+        error,
+        formData,
+        handleChange,
+        handleSave,
+    } = useEditableForm<User>(handleRegister);
     return (
         <div className="grid gap-3">
             <Field
                 editing
                 label="Имя"
                 name="name"
-                value={registerForm.name}
-                onChange={handleRegisterChange}
+                value={formData.name}
+                onChange={handleChange}
                 placeholder="Иван Иванов"
             />
             <Field
                 editing
                 label="E-mail"
                 name="email"
-                value={registerForm.email}
-                onChange={handleRegisterChange}
+                value={formData.email}
+                onChange={handleChange}
                 type="email"
                 placeholder="index@mail.ru"
             />
@@ -32,8 +37,8 @@ export default function () {
                 editing
                 label="Пароль"
                 name="password"
-                value={registerForm.password}
-                onChange={handleRegisterChange}
+                value={formData.password}
+                onChange={handleChange}
                 type="password"
                 placeholder="••••••••"
             />
@@ -41,8 +46,8 @@ export default function () {
                 editing
                 label="Подтвердите пароль"
                 name="confirmPassword"
-                value={registerForm.confirmPassword}
-                onChange={handleRegisterChange}
+                value={formData.confirmPassword}
+                onChange={handleChange}
                 type="password"
                 placeholder="••••••••"
             />
@@ -50,7 +55,7 @@ export default function () {
             {error && <p className="text-sm text-rose-600">{error}</p>}
 
             <div className="flex flex-col gap-1 sm:items-center sm:justify-center my-3">
-                <Button variant="indigo" className='px-7' onClick={handleRegister}>
+                <Button variant="indigo" className='px-7' onClick={handleSave}>
                     Зарегистрироваться
                 </Button>
             </div>

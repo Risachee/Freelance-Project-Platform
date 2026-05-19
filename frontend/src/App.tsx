@@ -10,6 +10,7 @@ import { ClientProvider } from './context/ClientsContext';
 import ProjectCard from './components/pages/projects/ProjectCard';
 import AuthScreen from './components/layout/AuthScreen';
 import { AuthProvider } from './context/AuthContext';
+import GuestScreen from './components/layout/GuestScreen';
 
 function App() {
   return (
@@ -19,6 +20,11 @@ function App() {
           <AuthProvider>
             <AuthScreen />
           </AuthProvider>} />
+        <Route path="/guest" element={
+          <ProjectProvider>
+            <GuestScreen />
+          </ProjectProvider>
+        } />
         <Route element={<Layout />}>
           <Route path="/projects" element={
             <ProjectProvider>

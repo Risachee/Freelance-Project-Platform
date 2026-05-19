@@ -14,19 +14,6 @@ import SelectField from '@/components/ui/SelectField';
 import type { Project } from '@/types/project';
 import { Button } from '@/components/ui/button';
 
-const emptyProject: Project = {
-  id: 0,
-  client: '',
-  title: '',
-  description: '',
-  status: 'Обсуждение',
-  budgetTotal: 0,
-  budgetPaid: 0,
-  deadline: '',
-  isArchived: false,
-  createdAt: '',
-  updatedAt: '',
-};
 export default function AddProjectDialog() {
   const { clients } = useClients();
   const { addProject } = useProjects();
@@ -38,7 +25,7 @@ export default function AddProjectDialog() {
     handleValueChange,
     handleSave,
     handleReset,
-  } = useEditableForm(emptyProject, (data) => {
+  } = useEditableForm<Project>((data) => {
     addProject(data);
     setOpen(false);
     handleReset();

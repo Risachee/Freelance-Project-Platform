@@ -4,6 +4,9 @@ import type { Project } from '@/types/project';
 import { useEditableForm } from '@/hooks/useEditableForm';
 import { useProjects } from '@/context/ProjectContext';
 import StatusBadge from '@/components/ui/StatusBage';
+import { Copy, RefreshCw } from 'lucide-react';
+import { Button } from '@base-ui/react';
+import { useGuestToken } from '@/hooks/useGuestToken';
 
 const ProjectInfo = ({ project }: { project: Project },) => {
   const { updateProject } = useProjects();
@@ -14,7 +17,8 @@ const ProjectInfo = ({ project }: { project: Project },) => {
     handleChange,
     handleSave,
     handleReset,
-  } = useEditableForm<Project>(project, updateProject);
+  } = useEditableForm<Project>(updateProject, project);
+  const { token, isCopied, copyToken } = useGuestToken(project.guestToken);
 
   return (
     <div className="rounded-2xl border border-slate-100 bg-slate-50 p-6 shadow-sm">
@@ -66,7 +70,7 @@ const ProjectInfo = ({ project }: { project: Project },) => {
           onChange={handleChange}
           placeholder="Имя клиента"
         />
-        
+
         <Field
           label="Дедлайн"
           editing={isEditing}
@@ -116,6 +120,57 @@ const ProjectInfo = ({ project }: { project: Project },) => {
             updateProject({ ...project, status: newStatus });
           }}
         />
+      </div>
+      <div className="mt-6 rounded-xl border border-slate-200 bg-white p-4">
+        <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+          Токен для заказчика
+        </p>
+
+        {!project.guestToken ? (
+          <div className="mt-2">
+            <button
+              type="button"
+              onClick={handleSave}
+              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            >
+              <RefreshCw size={16} />
+              Создать токен
+            </button>
+            <p className="mt-2 text-xs text-slate-500">
+              После создания токен можно будет отправить заказчику для просмотра статуса проекта.
+            </p>
+          </div>
+        ) : (
+          <div className="mt-2 flex items-center justify-between gap-3">
+            <code className="rounded-lg bg-slate-50 px-3 py-2 text-sm font-mono text-indigo-700">
+              {token}
+            </code>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={copyToken}
+                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                title="Копировать"
+              >
+                <Copy size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={handleSave}
+                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                title="Обновить токен"
+              >
+                <RefreshCw size={16} />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {isCopied && (
+          <p className="mt-2 text-xs text-emerald-600">
+            Токен скопирован в буфер обмена
+          </p>
+        )}
       </div>
     </div>
   );

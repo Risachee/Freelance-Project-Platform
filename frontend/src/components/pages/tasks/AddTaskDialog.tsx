@@ -11,22 +11,10 @@ import {
 import { useProjects } from '@/context/ProjectContext';
 import { useTasks } from '@/context/TasksContext';
 import { useEditableForm } from '@/hooks/useEditableForm';
-import type { Task } from '@/types/task';
 import { Button } from '@/components/ui/button';
+import type { Task } from '@/types/task';
 
 const taskPriorities = ['low', 'medium', 'high', 'urgent']
-
-const emptyTask: Task = {
-  id: 0,
-  title: '',
-  description: '',
-  status: 'Активные',
-  priority: 'low',
-  dueDate: '',
-  projectId: 0,
-  completed: false,
-  order: 1,
-}
 
 export default function AddTaskDialog() {
   const [open, setOpen] = useState(false);
@@ -39,7 +27,7 @@ export default function AddTaskDialog() {
     handleSave,
     handleValueChange,
     handleReset,
-  } = useEditableForm(emptyTask, (data) => {
+  } = useEditableForm<Task>((data) => {
     console.log('Создаем задачу:', data);
     addTask(data);
     setOpen(false);

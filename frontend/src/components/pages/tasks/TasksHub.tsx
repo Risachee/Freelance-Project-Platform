@@ -10,7 +10,7 @@ import { TasksProvider } from '@/context/TasksContext';
 export default function TasksHub() {
   const { filteredTasks, activeFilter, setActiveFilter } = useTasks();
   const [search, setSearch] = useState('')
-  const statuses = ['Все', 'Активные', 'Приостановленные', 'Завершенные']
+  const statuses = ['Активные', 'Приостановленные', 'Завершенные']
   return (
     <div>
       <SectionHeader

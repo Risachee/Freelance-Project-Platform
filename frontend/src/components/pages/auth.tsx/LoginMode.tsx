@@ -1,15 +1,20 @@
 import Field from "@/components/ui/Field";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
+import { useEditableForm } from "@/hooks/useEditableForm";
+import type { User } from "@/types/user";
 
 export default function () {
     const {
-        loginForm,
-        handleLoginChange,
-        error,
         handleLogin,
         goToGuest,
     } = useAuth();
+      const {
+        error,
+        formData,
+        handleChange,
+        handleSave,
+      } = useEditableForm<User>(handleLogin);
     return (
         <div>
             <div className="grid gap-5">
@@ -17,8 +22,8 @@ export default function () {
                     editing
                     label="E-mail"
                     name="email"
-                    value={loginForm.email}
-                    onChange={handleLoginChange}
+                    value={formData.email}
+                    onChange={handleChange}
                     type="email"
                     placeholder="index@mail.ru"
                 />
@@ -26,8 +31,8 @@ export default function () {
                     editing
                     label="Пароль"
                     name="password"
-                    value={loginForm.password}
-                    onChange={handleLoginChange}
+                    value={formData.password}
+                    onChange={handleChange}
                     type="password"
                     placeholder="••••••••"
                 />
@@ -39,7 +44,7 @@ export default function () {
                 <Button
                     className="px-10"
                     variant="indigo"
-                    onClick={handleLogin}
+                    onClick={handleSave}
                 >
                     Войти
                 </Button>

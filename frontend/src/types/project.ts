@@ -15,4 +15,5 @@ export interface Project {
   isArchived: boolean
   createdAt?: string
   updatedAt?: string
+  guestToken?: string | null;
 }

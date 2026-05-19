@@ -29,6 +29,7 @@ const initialProjects: Project[] = [
     isArchived: false,
     createdAt: '2026-04-01',
     updatedAt: '2026-04-12',
+    guestToken:'425vavdc6v875v97wd385t93165071894'
   },
   {
     id: 2,
