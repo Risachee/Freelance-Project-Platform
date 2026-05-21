@@ -35,7 +35,7 @@ const Field = ({
         )}
         <div className="flex items-center gap-2 mt-1 text-slate-700">
           {icon}
-          <span>{value}</span>
+          <span>{value ?? ''}</span>
         </div>
       </div>
     );
@@ -53,7 +53,7 @@ const Field = ({
         {as === 'textarea' ? (
           <textarea
             name={name}
-            value={value}
+            value={value ?? ''}
             onChange={onChange}
             placeholder={placeholder}
             className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-indigo-300"
@@ -62,7 +62,7 @@ const Field = ({
           <input
             name={name}
             type={type}
-            value={value}
+            value={value ?? ''}
             onChange={onChange}
             placeholder={placeholder}
             className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2  text-slate-700 outline-none focus:border-indigo-300"

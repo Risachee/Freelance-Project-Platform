@@ -1,10 +1,6 @@
 import { NavLink } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  FolderOpen, 
-  Users, 
-  Calendar 
-} from 'lucide-react';
+import { LayoutDashboard, FolderOpen, Users, Calendar, LogOut } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext'; 
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Дашборд' },
@@ -14,6 +10,8 @@ const navItems = [
 ];
 
 export default function Sidebar() {
+  const { logout } = useAuth();
+
   return (
     <div className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col">
       <div className="p-6 border-b">
@@ -28,8 +26,8 @@ export default function Sidebar() {
             to={item.to}
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-3 rounded-xl mb-1 text-sm font-medium transition-colors ${
-                isActive 
-                  ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950' 
+                isActive
+                  ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950'
                   : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
               }`
             }
@@ -39,6 +37,17 @@ export default function Sidebar() {
           </NavLink>
         ))}
       </nav>
+
+      <div className="p-4 border-t">
+        <button
+          onClick={logout}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors
+                     hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+        >
+          <LogOut className="w-5 h-5" />
+          Выйти из системы
+        </button>
+      </div>
     </div>
   );
 }

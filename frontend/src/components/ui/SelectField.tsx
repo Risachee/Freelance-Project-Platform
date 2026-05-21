@@ -32,7 +32,7 @@ const SelectField = ({
         <div className={`grid gap-2 ${className}`}>
             <label className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</label>
 
-            <Select value={value} onValueChange={onValueChange}>
+            <Select value={value ?? ''} onValueChange={onValueChange}>
                 <SelectTrigger className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-500 outline-none focus:border-indigo-300 ">
                     <SelectValue
                         placeholder={placeholder}

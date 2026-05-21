@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { Project } from '@/types/project';
-
 import { useClients } from './ClientsContext';
 import { projectService } from '@/api/projectService';
 
@@ -22,29 +21,30 @@ type ProjectsContextType = {
 
 const ProjectsContext = createContext<ProjectsContextType | undefined>(undefined);
 
-
-
 export const ProjectProvider = ({ children }: { children: React.ReactNode }) => {
-  const { clients } = useClients(); 
+  const { clients } = useClients();
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      return;
+    }
+
     const loadProjects = async () => {
       try {
-
         const data = await projectService.getAll();
         setProjects(data);
         console.log("Проекты получены", projects);
       } catch (error) {
         console.error('Ошибка при загрузке проектов с бэкенда:', error);
       } finally {
-
       }
     };
 
     loadProjects();
   }, []);
-
 
   const [activeFilter, setActiveFilter] = useState('Все');
   const [search, setSearch] = useState('');
@@ -82,7 +82,7 @@ export const ProjectProvider = ({ children }: { children: React.ReactNode }) => 
   };
 
   const updateProject = (updatedProject: Project) => {
-    
+
     console.log('Project updated:', updatedProject);
   };
 
