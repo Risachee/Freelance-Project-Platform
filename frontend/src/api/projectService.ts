@@ -1,4 +1,4 @@
-import { api } from './axiosInstance'; 
+import { api } from './axiosInstance';
 import type { Project } from '@/types/project';
 
 

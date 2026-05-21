@@ -16,11 +16,11 @@ function App() {
       <Routes>
         <Route path="/" element={<AuthProvider><AuthScreen /></AuthProvider>} />
         <Route path="/guest" element={<GuestScreen />} />
-        <Route element={<Layout />}>
+        <Route element={<AuthProvider><Layout /></AuthProvider>}>
           <Route path="/projects" element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
               <ProjectsHub />
-            // </ProtectedRoute>
+            </ProtectedRoute>
           } />
           <Route path="/clients" element={
             // <ProtectedRoute>
