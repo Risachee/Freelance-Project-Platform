@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'tasks',
     'comments',
     'guests',
+    'clients',
 ]
 
 MIDDLEWARE = [

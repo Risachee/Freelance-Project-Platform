@@ -1,12 +1,13 @@
 from django.db import models
 from users.models import User
+from clients.models import Client
 
 class Project(models.Model):
     class Status(models.TextChoices):
-        DISCUSSION = "discussion"
-        ACTIVE = "active"
-        PAUSED = "paused"
-        DONE = "done"
+        DISCUSSION = "discussion", "Обсуждение"
+        ACTIVE = "active", "В работе"
+        PAUSED = "paused", "На паузе"
+        DONE = "done", "Завершен"
 
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -21,6 +22,14 @@ class Project(models.Model):
         max_length=20,
         choices=Status.choices,
         default=Status.DISCUSSION
+    )
+
+    client = models.ForeignKey(
+        Client,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="projects"
     )
 
     deadline = models.DateField(null=True, blank=True)

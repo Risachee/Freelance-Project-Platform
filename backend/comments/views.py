@@ -1,11 +1,12 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
+
+from guests.models import Guest
 from .models import Comment
 from .serializers import CommentSerializer
-from guests.models import Guest
 
 
 class CommentViewSet(ModelViewSet):
@@ -13,50 +14,42 @@ class CommentViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        project_id = self.kwargs["project_pk"]
+
         return Comment.objects.filter(
+            project_id=project_id,
             project__owner=self.request.user
-        )
+        ).order_by("created_at")
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        project_id = self.kwargs["project_pk"]
 
+        serializer.save(
+            project_id=project_id,
+            author=self.request.user
+        )
+    
 class GuestCommentView(APIView):
 
     def get(self, request, token):
         guest = get_object_or_404(Guest, token=token)
 
-        comments = Comment.objects.filter(project=guest.project).order_by("created_at")
+        comments = Comment.objects.filter(
+            project=guest.project
+        ).order_by("created_at")
 
-        data = [
-            {
-                "id": c.id,
-                "text": c.text,
-                "author": c.author.username if c.author else None,
-                "guest": str(c.guest_token) if c.guest_token else None,
-                "created_at": c.created_at,
-            }
-            for c in comments
-        ]
-
-        return Response(data)
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
 
     def post(self, request, token):
         guest = get_object_or_404(Guest, token=token)
 
-        text = request.data.get("text")
+        serializer = CommentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        if not text:
-            return Response({"error": "Text is required"}, status=400)
-
-        comment = Comment.objects.create(
+        serializer.save(
             project=guest.project,
-            guest_token=token,
-            text=text
+            guest_token=guest.token
         )
 
-        return Response({
-            "id": comment.id,
-            "text": comment.text,
-            "guest": str(token),
-            "created_at": comment.created_at
-        }, status=201)
+        return Response(serializer.data, status=201)
