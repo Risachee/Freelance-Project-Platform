@@ -20,9 +20,9 @@ export default function () {
             <div className="grid gap-5">
                 <Field
                     editing
-                    label="E-mail"
-                    name="email"
-                    value={formData.email}
+                    label="Имя пользователя"
+                    name="username"
+                    value={formData.username}
                     onChange={handleChange}
                     type="email"
                     placeholder="index@mail.ru"

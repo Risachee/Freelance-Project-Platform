@@ -73,8 +73,8 @@ export default function AddProjectDialog() {
 
             <SelectField
               label="Заказчик"
-              value={formData.client}
-              onValueChange={(val) => handleValueChange('client', val)}
+              value={formData.clientName}
+              onValueChange={(val) => handleValueChange('clientName', val)}
               placeholder="Выберите клиента из списка"
               items={clients.map((c) => ({
                 value: c.name,
@@ -97,7 +97,7 @@ export default function AddProjectDialog() {
                 label="Общий бюджет (₽)"
                 editing
                 name="budgetTotal"
-                value={formData.budgetTotal}
+                value={formData.budget}
                 onChange={handleChange}
                 type="number"
                 placeholder="150000"

@@ -6,6 +6,6 @@ export interface Client {
   telegram?: string
   note?: string
   createdAt?: string
-  updatedAt?: string
-  projectsCount: number
+  projectsCount?: number
+  guestToken: string | null;
 }

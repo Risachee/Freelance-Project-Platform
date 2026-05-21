@@ -5,10 +5,11 @@ import { useEditableForm } from '@/hooks/useEditableForm';
 import { useProjects } from '@/context/ProjectContext';
 import StatusBadge from '@/components/ui/StatusBage';
 import { Copy, RefreshCw } from 'lucide-react';
-import { Button } from '@base-ui/react';
-import { useGuestToken } from '@/hooks/useGuestToken';
 
-const ProjectInfo = ({ project }: { project: Project },) => {
+import { useGuestToken } from '@/hooks/useGuestToken';
+import type { Client } from '@/types/client';
+
+const ProjectInfo = ({ project, client }: { project: Project; client: Client }) => {
   const { updateProject } = useProjects();
   const {
     formData,
@@ -18,7 +19,8 @@ const ProjectInfo = ({ project }: { project: Project },) => {
     handleSave,
     handleReset,
   } = useEditableForm<Project>(updateProject, project);
-  const { token, isCopied, copyToken } = useGuestToken(project.guestToken);
+
+  const { token, isCopied, copyToken } = useGuestToken(client.guestToken);
 
   return (
     <div className="rounded-2xl border border-slate-100 bg-slate-50 p-6 shadow-sm">
@@ -84,16 +86,7 @@ const ProjectInfo = ({ project }: { project: Project },) => {
           label="Бюджет"
           editing={isEditing}
           name="budgetTotal"
-          value={formData.budgetTotal}
-          onChange={handleChange}
-          type="number"
-        />
-
-        <Field
-          label="Оплачено"
-          editing={isEditing}
-          name="budgetPaid"
-          value={formData.budgetPaid}
+          value={formData.budget}
           onChange={handleChange}
           type="number"
         />
@@ -126,7 +119,7 @@ const ProjectInfo = ({ project }: { project: Project },) => {
           Токен для заказчика
         </p>
 
-        {!project.guestToken ? (
+        {!client.guestToken ? (
           <div className="mt-2">
             <button
               type="button"

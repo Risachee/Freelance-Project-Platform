@@ -10,6 +10,7 @@ type ClientContextType = {
     setSelectedClient: (value: Client) => void
     addClient: (newClient: Client) => void
     updateClient: (updatedClient: Client) => void
+    getClientById: (id:number) => Client
 }
 
 const ClientContext = createContext<ClientContextType | undefined>(undefined)
@@ -23,6 +24,7 @@ const initialClients: Client[] = [
         telegram: '@morozov_dev',
         note: 'Нужен лендинг и форма заявки.',
         projectsCount: 3,
+        guestToken : '632473c9b3cbv928',
     },
     {
         id: 2,
@@ -32,6 +34,7 @@ const initialClients: Client[] = [
         telegram: '@maria_k',
         note: 'Предпочитает короткие созвоны по будням.',
         projectsCount: 3,
+        guestToken :null,
     },
     {
         id: 3,
@@ -41,6 +44,7 @@ const initialClients: Client[] = [
         telegram: '@ilya_sokolov',
         note: 'Проект по редизайну внутреннего кабинета.',
         projectsCount: 3,
+        guestToken :null,
     },
     {
         id: 4,
@@ -50,6 +54,7 @@ const initialClients: Client[] = [
         telegram: '@romashka_office',
         note: 'Корпоративный сайт, нужен согласованный стиль.',
         projectsCount: 3,
+        guestToken :null,
     },
     {
         id: 5,
@@ -59,6 +64,7 @@ const initialClients: Client[] = [
         telegram: '@lebedeva_cat',
         note: 'Запуск MVP для сервиса бронирования.',
         projectsCount: 3,
+        guestToken :null,
     },
 ]
 
@@ -83,6 +89,10 @@ export const ClientProvider = ({ children }: { children: React.ReactNode }) => {
 
         console.log('Client updated in DB:', updatedClient);
     };
+    const getClientById = (id:number) =>{
+        return clients.find(c => c.id === id)
+    }
+
     return (
         <ClientContext.Provider
             value={{
@@ -94,6 +104,7 @@ export const ClientProvider = ({ children }: { children: React.ReactNode }) => {
                 setSelectedClient,
                 addClient,
                 updateClient,
+                getClientById,
             }}>
             {children}
         </ClientContext.Provider>

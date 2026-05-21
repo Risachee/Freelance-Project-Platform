@@ -4,16 +4,14 @@ export const filter: ProjectStatus[] = ['Все', 'Обсуждение', 'В р
 
 export interface Project {
   id: number
-  // ownerId: number
-  client: string
+  client?: number
+  clientName?: string
+  owner?: number
   title: string
   description: string
   status: ProjectStatus
-  budgetTotal: number
-  budgetPaid: number
-  deadline?: string | null
+  budget: number
+  deadline: string | null
   isArchived: boolean
-  createdAt?: string
-  updatedAt?: string
-  guestToken?: string | null;
+  created_at: string
 }

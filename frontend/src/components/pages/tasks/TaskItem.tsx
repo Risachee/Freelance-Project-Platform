@@ -47,8 +47,8 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggleComplete }) => {
 
         <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 text-xs text-slate-500">
           <div className='text-s'>
-            <p>Проект: {task.projectId}</p>
-            <p>Дедлайн: {task.dueDate}</p>
+            <p>Проект: {task.project_id}</p>
+            <p>Дедлайн: {task.deadline}</p>
           </div>
           <button
             type="button"

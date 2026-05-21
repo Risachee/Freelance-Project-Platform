@@ -5,12 +5,13 @@ import type { Project } from '@/types/project';
 import Intro from '../pages/auth.tsx/Intro';
 import GuestTokenForm from '../pages/guest/GuestTokenForm';
 import GuestProjectInfo from '../pages/guest/GuestProjectInfo';
+import { useClients } from '@/context/ClientsContext';
 
-type ProjectInfoView = Project & { progress?: number };
 
 export default function GuestScreen() {
   const { projects } = useProjects();
-  const [projectInfo, setProjectInfo] = useState<ProjectInfoView | null>(null);
+  const { clients } = useClients();
+  const [foundProjects, setFoundProjects] = useState<Project[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const { formData, handleChange, handleSave, handleReset } = useEditableForm<{ token: string }>(
@@ -23,24 +24,20 @@ export default function GuestScreen() {
       setError('Введите токен');
       return;
     }
+    const foundClient = clients.find(c => c.guestToken === token.trim())
+    console.log(foundClient)
 
-    const foundProject = projects.find((p: Project) => p.guestToken === token.trim());
-
-    if (!foundProject) {
-      setError('Проект с таким токеном не найден. Проверьте токен.');
-      setProjectInfo(null);
+    if (!foundClient) {
+      setError('Потзователь с таким токеном не найден. Проверьте токен.');
+      setFoundProjects(null);
       return;
     }
-
     setError(null);
-    setProjectInfo({
-      ...foundProject,
-      progress: Math.min(100, Math.max(0, (foundProject.budgetPaid / foundProject.budgetTotal) * 100)),
-    });
+    setFoundProjects(projects.filter(p => p.client === foundClient.id));
   };
 
   const handleResetAll = () => {
-    setProjectInfo(null);
+    setFoundProjects(null);
     setError(null);
     handleReset();
   };
@@ -51,7 +48,7 @@ export default function GuestScreen() {
 
       <div className="w-full max-w-2xl px-4">
         <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-lg sm:p-8">
-          {!projectInfo ? (
+          {!foundProjects ? (
             <GuestTokenForm
               token={formData.token}
               error={error}
@@ -59,7 +56,8 @@ export default function GuestScreen() {
               onSubmit={handleSave}
             />
           ) : (
-            <GuestProjectInfo project={projectInfo} onReset={handleResetAll} />
+            <GuestProjectInfo projects={foundProjects} onReset={handleResetAll} />
+            
           )}
         </div>
       </div>

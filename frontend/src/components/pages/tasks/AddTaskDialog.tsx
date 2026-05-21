@@ -76,7 +76,7 @@ export default function AddTaskDialog() {
 
             <SelectField
               label="Проект"
-              value={getProjectById(formData.projectId)?.title ?? ''}
+              value={getProjectById(formData.project_id)?.title ?? ''}
               onValueChange={(val) => handleValueChange('projectId', val)}
               items={projects.map((project) => ({
                 value: project.title,
@@ -97,7 +97,7 @@ export default function AddTaskDialog() {
               label="Дедлайн"
               name="deadline"
               type="date"
-              value={formData.dueDate}
+              value={formData.deadline}
               onChange={handleChange}
               editing={true}
               icon={<Calendar size={16} className="text-slate-400" />}

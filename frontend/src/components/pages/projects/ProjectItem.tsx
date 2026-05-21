@@ -10,7 +10,7 @@ interface ProjectItemProps {
 
 const ProjectItem: React.FC<ProjectItemProps> = ({ project }) => {
   const { updateProject } = useProjects();
-
+  
   return (
     <div className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-lg">
       <div className="mb-5 flex items-start justify-between gap-4">
@@ -45,7 +45,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({ project }) => {
 
       <div className="flex items-center justify-between border-t border-slate-100 pt-4 text-sm">
         <span className="text-slate-500">Бюджет</span>
-        <span className="font-semibold text-slate-900">{project.budgetTotal}</span>
+        <span className="font-semibold text-slate-900">{project.budget}</span>
       </div>
       <div className="flex items-center justify-between  pt-4 text-sm">
         <span className="text-slate-500">Дедлайн</span>

@@ -20,7 +20,7 @@ export default function () {
                 editing
                 label="Имя"
                 name="name"
-                value={formData.name}
+                value={formData.username}
                 onChange={handleChange}
                 placeholder="Иван Иванов"
             />

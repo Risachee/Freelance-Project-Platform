@@ -17,7 +17,7 @@ export default function ClientCard() {
   }
 
   const clientProjects = projects.filter(
-    (project) => project.client === client.name
+    (project) => project.clientName === client.name
   );
 
   return (

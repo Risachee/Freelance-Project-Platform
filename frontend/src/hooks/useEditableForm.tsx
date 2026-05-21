@@ -20,6 +20,7 @@ export function useEditableForm<T>(onSave: (data: T) => void, initialValues?: T)
 
     const handleSave = () => {
         onSave(formData);
+        console.log(formData)
         setIsEditing(false);
     };
 

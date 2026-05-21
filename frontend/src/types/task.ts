@@ -6,15 +6,13 @@ export const prioritys: TaskPriority[] = ['low', 'medium', 'high' , 'urgent']
 
 export interface Task {
   id: number
-  projectId: number
+  project_id: number
   title: string
   description?: string
   status: TaskStatus
   priority: TaskPriority
   order: number
-  dueDate?: string | null
-  // isVisibleToClient: boolean
+  deadline: string | null
   createdAt?: string
-  updatedAt?: string
   completed:boolean
 }

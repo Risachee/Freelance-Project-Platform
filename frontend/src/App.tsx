@@ -4,58 +4,47 @@ import ProjectsHub from './components/pages/projects/ProjectsHub';
 import ClientsHub from './components/pages/clients/ClientsHub';
 import TasksHub from './components/pages/tasks/TasksHub';
 import ClientCard from './components/pages/clients/ClientCard';
-import { TasksProvider } from '@/context/TasksContext';
-import { ProjectProvider } from '@/context/ProjectContext';
-import { ClientProvider } from './context/ClientsContext';
 import ProjectCard from './components/pages/projects/ProjectCard';
 import AuthScreen from './components/layout/AuthScreen';
-import { AuthProvider } from './context/AuthContext';
 import GuestScreen from './components/layout/GuestScreen';
+import ProtectedRoute from './ProtectedRoute';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={
-          <AuthProvider>
-            <AuthScreen />
-          </AuthProvider>} />
-        <Route path="/guest" element={
-          <ProjectProvider>
-            <GuestScreen />
-          </ProjectProvider>
-        } />
+        <Route path="/" element={<AuthProvider><AuthScreen /></AuthProvider>} />
+        <Route path="/guest" element={<GuestScreen />} />
         <Route element={<Layout />}>
           <Route path="/projects" element={
-            <ProjectProvider>
+            // <ProtectedRoute>
               <ProjectsHub />
-            </ProjectProvider>} />
+            // </ProtectedRoute>
+          } />
           <Route path="/clients" element={
-            <ClientProvider>
+            // <ProtectedRoute>
               <ClientsHub />
-            </ClientProvider>} />
+            // {/* </ProtectedRoute> */}
+          } />
           <Route path="/tasks" element={
-            <TasksProvider>
+            // <ProtectedRoute>
               <TasksHub />
-            </TasksProvider>} />
+            // {/* </ProtectedRoute> */}
+          }/>
           <Route
             path="/clients/:id"
             element={
-              <ClientProvider>
-                <ProjectProvider>
-                  <ClientCard />
-                </ProjectProvider>
-              </ClientProvider>
-            }
-          />
+              // <ProtectedRoute>
+                <ClientCard />
+              // {/* </ProtectedRoute> */}
+            }/>
           <Route
             path="/projects/:id"
             element={
-              <ProjectProvider>
-                <TasksProvider>
-                  <ProjectCard />
-                </TasksProvider>
-              </ProjectProvider>
+              // <ProtectedRoute>
+                <ProjectCard />
+              // {/* </ProtectedRoute> */}
             }
           />
         </Route>
