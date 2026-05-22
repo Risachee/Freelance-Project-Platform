@@ -4,7 +4,6 @@ from rest_framework_nested.routers import NestedDefaultRouter
 from .views import ProjectViewSet
 from tasks.views import TaskViewSet
 from comments.views import CommentViewSet
-from guests.views import GuestLinkView
 
 router = DefaultRouter()
 router.register(r'', ProjectViewSet, basename='projects')
