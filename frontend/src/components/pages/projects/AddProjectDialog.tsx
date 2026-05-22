@@ -21,8 +21,8 @@ export default function AddProjectDialog() {
 
   const {
     formData,
+    setFormData,
     handleChange,
-    handleValueChange,
     handleSave,
     handleReset,
   } = useEditableForm<Project>((data) => {
@@ -38,7 +38,7 @@ export default function AddProjectDialog() {
 
   return (
     <>
-      <Button variant='indigo'onClick={() => setOpen(true)}>
+      <Button variant='indigo' onClick={() => setOpen(true)}>
         <Plus size={18} />
         Новый проект
       </Button>
@@ -73,11 +73,20 @@ export default function AddProjectDialog() {
 
             <SelectField
               label="Заказчик"
-              value={formData.clientName}
-              onValueChange={(val) => handleValueChange('clientName', val)}
+              value={formData.clientName ?? ''}
+              onValueChange={(selectedId) => {
+                const id = Number(selectedId);
+                const client = clients.find(c => c.id === id);
+
+                setFormData(prev => ({
+                  ...prev,
+                  client_id: client ? client.id : null,
+                  clientName: client ? client.name : '',
+                }));
+              }}
               placeholder="Выберите клиента из списка"
               items={clients.map((c) => ({
-                value: c.name,
+                value: c.id.toString(),
                 label: c.name,
               }))}
             />
@@ -96,8 +105,8 @@ export default function AddProjectDialog() {
               <Field
                 label="Общий бюджет (₽)"
                 editing
-                name="budgetTotal"
-                value={formData.budget}
+                name="budget"
+                value={formData.budget ?? ''}
                 onChange={handleChange}
                 type="number"
                 placeholder="150000"
@@ -107,7 +116,7 @@ export default function AddProjectDialog() {
           </div>
 
           <div className="flex justify-end gap-3 mt-4">
-            <Button variant="secondary"  onClick={closeDialog}>
+            <Button variant="secondary" onClick={closeDialog}>
               Отмена
             </Button>
             <Button variant="indigo" onClick={handleSave}>

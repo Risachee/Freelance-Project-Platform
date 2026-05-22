@@ -40,7 +40,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({ project }) => {
       </p>
 
       <p className="text-sm text-slate-600 mb-2 j">
-        Заказчик: {project.client}
+        Заказчик: {project.clientName}
       </p>
 
       <div className="flex items-center justify-between border-t border-slate-100 pt-4 text-sm">

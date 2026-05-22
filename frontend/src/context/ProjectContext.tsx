@@ -1,7 +1,9 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
 import type { Project } from '@/types/project';
 import { useClients } from './ClientsContext';
+import { useAuth } from './AuthContext';
 import { projectService } from '@/api/projectService';
+import { useNavigate } from 'react-router-dom';
 
 export type ProjectWithClientName = Project & { clientName: string };
 
@@ -12,94 +14,137 @@ type ProjectsContextType = {
   setActiveFilter: (value: string) => void;
   search: string;
   setSearch: (value: string) => void;
-
-  addProject: (newProject: Project) => void;
-  updateProject: (updatedProject: Project) => void;
-
+  addProject: (newProject: Omit<Project, 'id' | 'created_at'>) => Promise<void>;
+  updateProject: (updatedProject: Project) => Promise<void>;
   getProjectById: (id: number) => ProjectWithClientName | undefined;
+  deleteProject: (projectToDelete: Project) => Promise<void>;
+  isLoading: boolean;
 };
 
 const ProjectsContext = createContext<ProjectsContextType | undefined>(undefined);
 
 export const ProjectProvider = ({ children }: { children: React.ReactNode }) => {
-  const { clients } = useClients();
+  const { clients, } = useClients();
+  const { isAuthenticated } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeFilter, setActiveFilter] = useState('Все');
+  const [search, setSearch] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
-
-    if (!token) {
+    if (!isAuthenticated) {
+      setIsLoading(false);
+      setProjects([]);
       return;
     }
 
     const loadProjects = async () => {
       try {
+        setIsLoading(true);
         const data = await projectService.getAll();
         setProjects(data);
-        console.log("Проекты получены", projects);
+        console.log("Проекты получены", data.length);
       } catch (error) {
-        console.error('Ошибка при загрузке проектов с бэкенда:', error);
+        console.error('Ошибка при загрузке проектов:', error);
       } finally {
+        setIsLoading(false);
       }
     };
 
     loadProjects();
-  }, []);
-
-  const [activeFilter, setActiveFilter] = useState('Все');
-  const [search, setSearch] = useState('');
+  }, [isAuthenticated]);
 
   const projectsWithClients = useMemo<ProjectWithClientName[]>(() => {
+    if (projects.length === 0) {
+      return [];
+    }
+
     return projects.map((project) => {
-      const client = clients.find((c) => c.id === project.client);
       return {
         ...project,
-        clientName: client?.name ?? 'Неизвестный клиент',
+        clientName: project.client?.name ?? 'Неизвестный клиент',
       };
     });
   }, [projects, clients]);
 
+
   const filteredProjects = useMemo<ProjectWithClientName[]>(() => {
     return projectsWithClients.filter((project) => {
-      const matchStatus =
-        activeFilter === 'Все' || project.status === activeFilter;
-
-      const matchSearch = project.title
-        .toLowerCase()
-        .includes(search.toLowerCase());
-
+      const matchStatus = activeFilter === 'Все' || project.status === activeFilter;
+      const matchSearch = project.title.toLowerCase().includes(search.toLowerCase());
       return matchStatus && matchSearch;
     });
   }, [projectsWithClients, activeFilter, search]);
 
-  const getProjectById = (id: number) => {
+  const getProjectById = useCallback((id: number) => {
     return projectsWithClients.find((p) => p.id === id);
-  };
+  }, [projectsWithClients]);
 
-  const addProject = (newProject: Project) => {
-    setProjects((prev) => [...prev, newProject]);
-    console.log('Project added:', newProject);
-  };
+  const addProject = useCallback(async (newProject: Omit<Project, 'id' | 'created_at'>) => {
+    try {
+      const created = await projectService.create(newProject);
+      setProjects((prev) => [...prev, created]);
+      console.log('Проект создан:', created);
+    } catch (error) {
+      console.error('Ошибка при создании проекта:', error);
+      throw error;
+    }
+  }, []);
 
-  const updateProject = (updatedProject: Project) => {
+  const updateProject = useCallback(async (updatedProject: Project) => {
+    try {
+      const { id, ...data } = updatedProject;
+      const refreshed = await projectService.update(id, data);
+      setProjects((prev) =>
+        prev.map((p) => (p.id === id ? refreshed : p))
+      );
+      console.log('Проект обновлён:', refreshed);
+    } catch (error) {
+      console.error('Ошибка при обновлении проекта:', error);
+      throw error;
+    }
+  }, []);
 
-    console.log('Project updated:', updatedProject);
-  };
+  const deleteProject = useCallback(async (projectToDelete: Project) => {
+    try {
+      await projectService.delete(projectToDelete.id);
+
+      setProjects((prev) => prev.filter((p) => p.id !== projectToDelete.id));
+      console.log('Проект удалён:', projectToDelete);
+
+      navigate('/projects');
+    } catch (error) {
+      console.error(' Ошибка при удалении проекта:', error);
+      throw error;
+    }
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    projects: projectsWithClients,
+    filteredProjects,
+    activeFilter,
+    setActiveFilter,
+    search,
+    setSearch,
+    addProject,
+    updateProject,
+    getProjectById,
+    deleteProject,
+    isLoading,
+  }), [
+    projectsWithClients,
+    filteredProjects,
+    activeFilter,
+    search,
+    addProject,
+    updateProject,
+    getProjectById,
+    isLoading,
+  ]);
 
   return (
-    <ProjectsContext.Provider
-      value={{
-        projects: projectsWithClients,
-        filteredProjects,
-        activeFilter,
-        setActiveFilter,
-        search,
-        setSearch,
-        addProject,
-        updateProject,
-        getProjectById,
-      }}
-    >
+    <ProjectsContext.Provider value={contextValue}>
       {children}
     </ProjectsContext.Provider>
   );

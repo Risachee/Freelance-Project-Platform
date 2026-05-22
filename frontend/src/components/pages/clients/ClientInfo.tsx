@@ -1,13 +1,14 @@
-import { Mail, Phone, Send } from 'lucide-react';
+import { Mail, Phone, Send, Trash2 } from 'lucide-react';
 import type { Client } from '@/types/client';
 import EditButton from '@/components/ui/EditButton';
 import Field from '@/components/ui/Field';
 import { useEditableForm } from '@/hooks/useEditableForm';
 import { useClients } from '@/context/ClientsContext';
+import { Button } from '@/components/ui/button';
 
 
 const ClientInfo = ({ client }: { client: Client }) => {
-  const { updateClient } = useClients(); 
+  const { updateClient, deleteClient } = useClients();
 
   const {
     isEditing,
@@ -17,6 +18,7 @@ const ClientInfo = ({ client }: { client: Client }) => {
     handleSave,
     handleReset,
   } = useEditableForm<Client>(updateClient, client);
+
 
   return (
     <div className="rounded-2xl border border-slate-100 bg-slate-50 p-6">
@@ -61,6 +63,7 @@ const ClientInfo = ({ client }: { client: Client }) => {
 
       <div className="space-y-2 text-sm text-slate-700">
         <Field
+          label={isEditing ? 'Email' : ''}
           editing={isEditing}
           name="email"
           value={formData.email}
@@ -69,6 +72,7 @@ const ClientInfo = ({ client }: { client: Client }) => {
           className="flex items-center gap-2"
         />
         <Field
+          label={isEditing ? 'Телефон' : ''}
           editing={isEditing}
           name="phone"
           value={formData.phone}
@@ -77,11 +81,12 @@ const ClientInfo = ({ client }: { client: Client }) => {
           className="flex items-center gap-2"
         />
         <Field
+          label={isEditing ? 'Telegram' : ''}
           editing={isEditing}
           name="telegram"
           value={formData.telegram}
           onChange={handleChange}
-          icon={<Send size={14} className="text-slate-400" />}
+          icon={formData.telegram && <Send size={14} className="text-slate-400" />}
           className="flex items-center gap-2"
         />
       </div>
@@ -98,6 +103,12 @@ const ClientInfo = ({ client }: { client: Client }) => {
         as="textarea"
         className="mt-2"
       />
+      <div className="mt-4 mb-3 grid justify-end ">
+        <Button variant='destructive' onClick={() => deleteClient(client)}>
+          <Trash2 size={14} />
+          Удалить клиента
+        </Button>
+      </div>
     </div>
   );
 };

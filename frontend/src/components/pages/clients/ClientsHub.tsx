@@ -21,7 +21,7 @@ export default function ClientsHub() {
                 searchPlaceholder="Поиск клиентов..."
                 search={search}
                 setSearch={setSearch}
-                action={<AddClientDialog/>}
+                action={<AddClientDialog />}
             />
 
             <div className="bg-white border border-zinc-200 rounded-3xl overflow-hidden p-3">
@@ -48,9 +48,10 @@ export default function ClientsHub() {
                                 <TableCell className="text-zinc-500">{client.note}</TableCell>
                                 <TableCell>
                                     <div className="flex flex-col text-sm text-zinc-600 gap-1">
-                                        <span className="flex items-center gap-2"><Mail size={14} /> {client.email}</span>
-                                        <span className="flex items-center gap-2"><Phone size={14} /> {client.phone}</span>
-                                        <span className="flex items-center gap-2"><Send size={14} /> {client.telegram}</span>
+                                        {client.email && <span className="flex items-center gap-2"><Mail size={14} /> {client.email}</span>}
+                                        {client.phone && <span className="flex items-center gap-2"><Phone size={14} /> {client.phone}</span>}
+                                        {client.telegram && <span className="flex items-center gap-2"><Send size={14} /> {client.telegram}</span>}
+
                                     </div>
                                 </TableCell>
                                 <TableCell className="text-right font-medium">

@@ -6,15 +6,15 @@ import type { User } from "@/types/user";
 
 export default function () {
     const {
+        error,
         handleLogin,
         goToGuest,
     } = useAuth();
-      const {
-        error,
+    const {
         formData,
         handleChange,
         handleSave,
-      } = useEditableForm<User>(handleLogin);
+    } = useEditableForm<User>(handleLogin);
     return (
         <div>
             <div className="grid gap-5">
