@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { Task, TaskStatus } from '@/types/task';
+import { taskService } from '@/api/taskService';
 
 type TasksContextType = {
   tasks: Task[];
@@ -7,8 +8,9 @@ type TasksContextType = {
   activeFilter: TaskStatus;
   setActiveFilter: (value: TaskStatus) => void;
   toggleTaskComplete: (id: string | number) => void;
-  addTask: (newTask: Task) => void;
-  updateTask: (updatedTask: Task) => void;
+  addTask: (projectId: number, newTask: Task) => Promise<void>;
+  updateTask: (projectId: number | string, taskId: number | string, taskData: Task) => void;
+  projectTasks: (projectId: number) => Task[];
 };
 
 const TasksContext = createContext<TasksContextType | undefined>(undefined);
@@ -73,6 +75,10 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [activeFilter, setActiveFilter] = useState<TaskStatus>('Активные');
 
+  const projectTasks = (projectId: number) => {
+    return tasks.filter((item) => item.project_id === projectId)
+  }
+
   const toggleTaskComplete = (id: string | number) => {
     setTasks((prev) =>
       prev.map((task) =>
@@ -87,17 +93,30 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
       .sort((a, b) => a.order - b.order)
   }, [tasks, activeFilter]);
 
-  const addTask = (newTask: Task) => {
-    console.log('Client add in DB:', newTask);
-  };
+  const addTask = useCallback(async (projectId: number, newTask: Task) => {
+    try {
+      const created = await taskService.create(projectId, newTask);
+      // setTasks((prev) => [...prev, created]);
+      console.log('Задача создана:', created);
+    } catch (error) {
+      console.error('Ошибка при создании задачи:', error);
+      throw error;
+    }
+  }, []);
 
-  const updateTask = (updatedTask: Task) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
-    );
-
-    console.log('Task updated in DB:', updateTask);
-  };
+  const updateTask = useCallback(async (projectId: number | string, taskId: number | string, taskData: Task) => {
+    try {
+      const { id, ...data } = taskData;
+      const refreshed = await taskService.update(projectId, taskId, data);
+      // setTasks((prev) =>
+      //   prev.map((p) => (p.id === id ? refreshed : p))
+      // );
+      console.log('Задача обновлёна:', refreshed);
+    } catch (error) {
+      console.error('Ошибка при обновлении задачи:', error);
+      throw error;
+    }
+  }, []);
 
   return (
     <TasksContext.Provider
@@ -109,6 +128,7 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
         toggleTaskComplete,
         updateTask,
         addTask,
+        projectTasks,
       }}
     >
       {children}

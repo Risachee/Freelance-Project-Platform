@@ -10,12 +10,14 @@ export default function ProjectCard() {
   const {clients} = useClients();
   const { id } = useParams();
   const { getProjectById } = useProjects();
-  const { tasks } = useTasks();
+  const { projectTasks } = useTasks();
   const project = getProjectById(Number(id))
+
   if (!project) {
     return <div className="p-6 text-slate-500">Проект не найден</div>;
   }
-  const tasksproject = tasks.filter((item) => String(item.project_id) === id)
+  
+  const tasksproject = projectTasks(Number(id))
 
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 ">
