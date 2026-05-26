@@ -1,5 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.exceptions import PermissionDenied
 
 from .models import Task
@@ -32,3 +33,12 @@ class TaskViewSet(ModelViewSet):
             raise PermissionDenied()
 
         serializer.save()
+
+class UserTaskViewSet(ReadOnlyModelViewSet):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Task.objects.filter(
+            project__owner=self.request.user
+        ).order_by("project_id", "order")

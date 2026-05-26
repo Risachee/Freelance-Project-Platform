@@ -14,7 +14,13 @@ class ProjectSerializer(serializers.ModelSerializer):
         source="get_status_display",
         read_only=True
     )
+    token = serializers.SerializerMethodField()
+
+    def get_token(self, obj):
+        guest = obj.guest_set.first()
+        return str(guest.token) if guest else None
 
     class Meta:
         model = Project
         fields = "__all__"
+        read_only_fields = ("owner", "status_display")
