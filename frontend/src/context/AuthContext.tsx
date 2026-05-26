@@ -1,12 +1,11 @@
 import { authService } from '@/api/authService';
-import type { User } from '@/types/user';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 type ViewMode = 'login' | 'register';
 
 type AuthContextType = {
-  user: User | null;
+  isLoading: boolean;
   mode: ViewMode;
   isAuthenticated: boolean;
   setMode: (mode: ViewMode) => void;
@@ -14,36 +13,70 @@ type AuthContextType = {
   handleRegister: (credentials: any) => Promise<void>;
   logout: () => void;
   goToGuest: () => void;
+  error: string | null;
+
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [mode, setMode] = useState<ViewMode>('login');
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('access_token'));
 
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+    setIsLoading(false);
+  }, []);
+
+  useEffect(() =>{
+    setError(null)
+  }, [mode])
+
   const handleLogin = async (credentials: { username: string; password: string }) => {
-    const responseData = await authService.login(credentials);
-    localStorage.setItem('access_token', responseData.access);
-    const userData = await authService.user();
-    setUser(userData);
-    setIsAuthenticated(true);
-    navigate('/projects');
+    setError(null)
+    try {
+      const responseData = await authService.login(credentials);
+      localStorage.setItem('access_token', responseData.access);
+      setIsAuthenticated(true);
+      navigate('/projects',{ replace: true });
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        setError("Пользователь с таким именем не найден");
+      }
+    }
   }
 
-  const handleRegister = async (credentials: { username: string; email: string; password: string }) => {
-    await authService.register(credentials);
-    setMode('login');
-    navigate('/login');
-  };
-
-  useEffect(() => {
-    if (isAuthenticated && !user) {
-      authService.user().then(setUser).catch(() => logout());
+  const handleRegister = async (values: any) => {
+    setError(null)
+    const credentials = {
+      username: values.username,
+      password: values.password,
     }
-  }, [isAuthenticated]);
+    if (values.password === values.confirmPassword) {
+      try {
+        await authService.register(credentials);
+        const loginData = await authService.login({
+          username: credentials.username,
+          password: credentials.password
+        });
+
+        localStorage.setItem('access_token', loginData.access);
+        setIsAuthenticated(true);
+
+        navigate('/projects');
+      } catch (error: any) {
+        if (error.response?.status === 400) {
+          setError("Пользователь с таким именем уже существует");
+        }
+      }
+    } else { setError("Пароли не совпадают"); }
+  };
 
   const logout = () => {
     localStorage.removeItem('access_token');
@@ -56,7 +89,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const value: AuthContextType = {
-    user,
+    isLoading,
     mode,
     setMode: (m) => {
       setMode(m);
@@ -66,11 +99,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     goToGuest,
     isAuthenticated,
     logout,
+    error,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

@@ -12,6 +12,7 @@ export type SelectFieldItem = {
 };
 
 interface SelectFieldProps {
+    editing?: boolean;
     label: string;
     value: string;
     onValueChange: (value: string) => void;
@@ -21,6 +22,7 @@ interface SelectFieldProps {
 }
 
 const SelectField = ({
+    editing = true,
     label,
     value,
     onValueChange,
@@ -28,6 +30,20 @@ const SelectField = ({
     placeholder = 'Выберите из списка',
     className = '',
 }: SelectFieldProps) => {
+    if (!editing) {
+        return (
+            <div className={className}>
+                {label && (
+                    <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                        {label}
+                    </p>
+                )}
+                <div className="flex items-center gap-2 mt-1 text-slate-700">
+                    <span>{value ?? ''}</span>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className={`grid gap-2 ${className}`}>
             <label className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</label>

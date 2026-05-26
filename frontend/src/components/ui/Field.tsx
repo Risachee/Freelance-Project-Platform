@@ -1,11 +1,12 @@
 import React from 'react';
 
 type FieldProps = {
+  autoComplete?: string;
   label?: string;
   name: string;
   value: string | number;
   editing: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (e: React.SyntheticEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   as?: 'input' | 'textarea';
   type?: string;
   icon?: React.ReactNode;

@@ -6,10 +6,10 @@ import type { User } from "@/types/user";
 
 export default function () {
     const {
+        error,
         handleRegister,
     } = useAuth();
     const {
-        error,
         formData,
         handleChange,
         handleSave,

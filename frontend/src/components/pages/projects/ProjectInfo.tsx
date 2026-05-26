@@ -4,13 +4,15 @@ import type { Project } from '@/types/project';
 import { useEditableForm } from '@/hooks/useEditableForm';
 import { useProjects } from '@/context/ProjectContext';
 import StatusBadge from '@/components/ui/StatusBage';
-import { Copy, RefreshCw } from 'lucide-react';
+import { Copy, RefreshCw, Trash2 } from 'lucide-react';
 
 import { useGuestToken } from '@/hooks/useGuestToken';
+import SelectField from '@/components/ui/SelectField';
 import type { Client } from '@/types/client';
+import { Button } from '@/components/ui/button';
 
-const ProjectInfo = ({ project, client }: { project: Project; client: Client }) => {
-  const { updateProject } = useProjects();
+const ProjectInfo = ({ project, clients }: { project: Project; clients: Client[] }) => {
+  const { updateProject, deleteProject } = useProjects();
   const {
     formData,
     isEditing,
@@ -18,9 +20,10 @@ const ProjectInfo = ({ project, client }: { project: Project; client: Client }) 
     handleChange,
     handleSave,
     handleReset,
+    setFormData,
   } = useEditableForm<Project>(updateProject, project);
 
-  const { token, isCopied, copyToken } = useGuestToken(client.guestToken);
+  const { token, isCopied, copyToken } = useGuestToken(project.token || null);
 
   return (
     <div className="rounded-2xl border border-slate-100 bg-slate-50 p-6 shadow-sm">
@@ -64,15 +67,26 @@ const ProjectInfo = ({ project, client }: { project: Project; client: Client }) 
       </div>
 
       <div className="mt-7 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
-        <Field
+        <SelectField
           label="Заказчик"
           editing={isEditing}
-          name="client"
-          value={formData.client}
-          onChange={handleChange}
-          placeholder="Имя клиента"
-        />
+          value={formData.clientName ?? ''}
+          onValueChange={(selectedId) => {
+            const id = Number(selectedId);
+            const client = clients.find(c => c.id === id);
 
+            setFormData(prev => ({
+              ...prev,
+              client_id: client ? client.id : null,
+              clientName: client ? client.name : '',
+            }));
+          }}
+          placeholder="Выберите клиента из списка"
+          items={clients.map((c) => ({
+            value: c.id.toString(),
+            label: c.name,
+          }))}
+        />
         <Field
           label="Дедлайн"
           editing={isEditing}
@@ -85,7 +99,7 @@ const ProjectInfo = ({ project, client }: { project: Project; client: Client }) 
         <Field
           label="Бюджет"
           editing={isEditing}
-          name="budgetTotal"
+          name="budget"
           value={formData.budget}
           onChange={handleChange}
           type="number"
@@ -119,7 +133,7 @@ const ProjectInfo = ({ project, client }: { project: Project; client: Client }) 
           Токен для заказчика
         </p>
 
-        {!client.guestToken ? (
+        {!project.token ? (
           <div className="mt-2">
             <button
               type="button"
@@ -164,6 +178,13 @@ const ProjectInfo = ({ project, client }: { project: Project; client: Client }) 
             Токен скопирован в буфер обмена
           </p>
         )}
+      </div>
+
+      <div className="mt-4 mb-3 grid justify-end ">
+        <Button variant='destructive' onClick={() => deleteProject(project)}>
+          <Trash2 size={14} />
+          Удалить проект
+        </Button>
       </div>
     </div>
   );
