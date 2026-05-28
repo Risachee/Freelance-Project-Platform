@@ -6,7 +6,7 @@ type FieldProps = {
   name: string;
   value: string | number;
   editing: boolean;
-  onChange: (e: React.SyntheticEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   as?: 'input' | 'textarea';
   type?: string;
   icon?: React.ReactNode;
@@ -25,6 +25,7 @@ const Field = ({
   placeholder,
   className = '',
   icon,
+  autoComplete = 'off',
 }: FieldProps) => {
   if (!editing) {
     return (
@@ -66,6 +67,7 @@ const Field = ({
             value={value ?? ''}
             onChange={onChange}
             placeholder={placeholder}
+            autoComplete={autoComplete}
             className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2  text-slate-700 outline-none focus:border-indigo-300"
           />
         )}

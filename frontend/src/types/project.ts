@@ -1,6 +1,6 @@
 import type { Client } from "./client";
 
-export type ProjectStatus = 'Все'|'Обсуждение' | 'В работе' | 'На паузе' | 'Завершен'
+export type ProjectStatus = 'Все' | 'Обсуждение' | 'В работе' | 'На паузе' | 'Завершен'
 export const statuses: ProjectStatus[] = ['Обсуждение', 'В работе', 'На паузе', 'Завершен'];
 export const filter: ProjectStatus[] = ['Все', 'Обсуждение', 'В работе', 'На паузе', 'Завершен'];
 
@@ -12,7 +12,7 @@ export interface Project {
   owner?: number
   title: string
   description: string
-  status: ProjectStatus
+  status: string
   budget: number
   deadline: string
   isArchived?: boolean

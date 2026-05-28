@@ -9,7 +9,7 @@ import  { statuses } from "@/types/project";
 import { cn } from "@/lib/utils";
 
 interface StatusBadgeProps {
-  status: ProjectStatus;
+  status: string;
   onStatusChange?: (newStatus: ProjectStatus) => void;
 }
 

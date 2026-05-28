@@ -29,7 +29,7 @@ export default function AddTaskDialog() {
     handleReset,
   } = useEditableForm<Task>((data) => {
     console.log('Создаем задачу:', data);
-    addTask(data);
+    addTask(formData.project, data);
     setOpen(false);
     handleReset();
   });
@@ -76,8 +76,11 @@ export default function AddTaskDialog() {
 
             <SelectField
               label="Проект"
-              value={getProjectById(formData.project_id)?.title ?? ''}
-              onValueChange={(val) => handleValueChange('projectId', val)}
+              value={getProjectById(formData.project)?.title ?? ''}
+              onValueChange={(val) => {
+                const project = projects.find(p => p.title === val);
+                if (project) handleValueChange('project', project.id);
+              }}
               items={projects.map((project) => ({
                 value: project.title,
                 label: project.title,
@@ -92,16 +95,6 @@ export default function AddTaskDialog() {
                 label: priorety,
               }))}
             />
-
-            <Field
-              label="Дедлайн"
-              name="deadline"
-              type="date"
-              value={formData.deadline}
-              onChange={handleChange}
-              editing={true}
-              icon={<Calendar size={16} className="text-slate-400" />}
-            />
           </div>
 
           <div className="flex justify-end gap-3">
@@ -109,7 +102,7 @@ export default function AddTaskDialog() {
               Отмена
             </Button>
             <Button variant="indigo" onClick={handleSave}>
-              Создать проект
+              Создать задачу
             </Button>
           </div>
         </DialogContent>

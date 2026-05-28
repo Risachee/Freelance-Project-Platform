@@ -1,5 +1,5 @@
 import { authService } from '@/api/authService';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 type ViewMode = 'login' | 'register';
@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(false);
   }, []);
 
-  useEffect(() =>{
+  useEffect(() => {
     setError(null)
   }, [mode])
 
@@ -44,7 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const responseData = await authService.login(credentials);
       localStorage.setItem('access_token', responseData.access);
       setIsAuthenticated(true);
-      navigate('/projects',{ replace: true });
+      navigate('/projects', { replace: true });
     } catch (error: any) {
       if (error.response?.status === 401) {
         setError("Пользователь с таким именем не найден");
@@ -56,23 +56,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setError(null)
     const credentials = {
       username: values.username,
+      email: values.email,
       password: values.password,
     }
     if (values.password === values.confirmPassword) {
       try {
         await authService.register(credentials);
-        const loginData = await authService.login({
-          username: credentials.username,
-          password: credentials.password
-        });
 
-        localStorage.setItem('access_token', loginData.access);
-        setIsAuthenticated(true);
-
-        navigate('/projects');
+        window.alert("Вы успешно зарегистрированы");
+        setMode('login');
       } catch (error: any) {
         if (error.response?.status === 400) {
-          setError("Пользователь с таким именем уже существует");
+          setError("Данные введины неверно или пользователь с таким именем уже существует");
         }
       }
     } else { setError("Пароли не совпадают"); }
@@ -88,19 +83,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigate('/guest');
   };
 
-  const value: AuthContextType = {
+  const value: AuthContextType = useMemo(() => ({
     isLoading,
     mode,
-    setMode: (m) => {
-      setMode(m);
-    },
+    setMode,
     handleLogin,
     handleRegister,
     goToGuest,
     isAuthenticated,
     logout,
     error,
-  };
+  }), [isLoading, mode, handleLogin, handleRegister, goToGuest, isAuthenticated, logout, error]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

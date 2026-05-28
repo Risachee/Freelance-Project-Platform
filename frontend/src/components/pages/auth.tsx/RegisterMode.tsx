@@ -32,6 +32,7 @@ export default function () {
                 onChange={handleChange}
                 type="email"
                 placeholder="index@mail.ru"
+                autoComplete="off"
             />
             <Field
                 editing

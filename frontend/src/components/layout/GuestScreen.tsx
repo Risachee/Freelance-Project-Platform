@@ -1,43 +1,50 @@
-import { useState } from 'react';
-import { useProjects } from '@/context/ProjectContext';
+import { useState, useCallback, useMemo } from 'react';
 import { useEditableForm } from '@/hooks/useEditableForm';
-import type { Project } from '@/types/project';
+import { guestService } from '@/api/guestService'; 
 import Intro from '../pages/auth.tsx/Intro';
 import GuestTokenForm from '../pages/guest/GuestTokenForm';
 import GuestProjectInfo from '../pages/guest/GuestProjectInfo';
-import { useClients } from '@/context/ClientsContext';
-
+import type { Project } from '@/types/project';
 
 export default function GuestScreen() {
-  const { projects } = useProjects();
-  const { clients } = useClients();
-  const [foundProjects, setFoundProjects] = useState<Project[] | null>(null);
+  const [foundProject, setFoundProject] = useState<Project | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { formData, handleChange, handleSave, handleReset } = useEditableForm<{ token: string }>(
-    (data) => checkToken(data.token),
-    { token: '' }
-  );
-
-  const checkToken = (token: string) => {
+  const initialValues = useMemo(() => ({ token: '' }), []);
+  const checkToken = useCallback(async (token: string) => {
     if (!token || token.trim().length === 0) {
       setError('Введите токен');
       return;
     }
-    const foundClient = clients.find(c => c.guestToken === token.trim())
-    console.log(foundClient)
 
-    if (!foundClient) {
-      setError('Потзователь с таким токеном не найден. Проверьте токен.');
-      setFoundProjects(null);
-      return;
-    }
+    setIsLoading(true);
     setError(null);
-    setFoundProjects(projects.filter(p => p.client === foundClient.id));
-  };
+
+    try {
+      const project = await guestService.getProjectByToken(token.trim());
+      setFoundProject(project);
+    } catch (err: any) {
+          if (err.response?.status === 404) {
+        setError('Проект с таким токеном не найден. Проверьте токен.');
+      } else if (err.response?.status === 410) {
+        setError('Ссылка устарела или была отозвана.');
+      } else {
+        setError('Ошибка сервера. Попробуйте позже.');
+      }
+      setFoundProject(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []); 
+
+  const { formData, handleChange, handleSave, handleReset } = useEditableForm<{ token: string }>(
+    (data) => checkToken(data.token),
+    initialValues
+  );
 
   const handleResetAll = () => {
-    setFoundProjects(null);
+    setFoundProject(null);
     setError(null);
     handleReset();
   };
@@ -48,16 +55,16 @@ export default function GuestScreen() {
 
       <div className="w-full max-w-2xl px-4">
         <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-lg sm:p-8">
-          {!foundProjects ? (
+          {!foundProject ? (
             <GuestTokenForm
               token={formData.token}
               error={error}
               onTokenChange={handleChange}
               onSubmit={handleSave}
+             
             />
           ) : (
-            <GuestProjectInfo projects={foundProjects} onReset={handleResetAll} />
-            
+            <GuestProjectInfo project={foundProject} onReset={handleResetAll} />
           )}
         </div>
       </div>

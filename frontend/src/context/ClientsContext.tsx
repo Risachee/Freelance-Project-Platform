@@ -90,11 +90,11 @@ export const ClientProvider = ({ children }: { children: React.ReactNode }) => {
             await clientService.delete(clientToDelete.id);
 
             setClients((prev) => prev.filter((p) => p.id !== clientToDelete.id));
-            console.log('Проект удалён:', clientToDelete);
+            console.log('Клиент удалён:', clientToDelete);
 
             navigate('/clients');
         } catch (error) {
-            console.error(' Ошибка при удалении проекта:', error);
+            console.error(' Ошибка при удалении клиента:', error);
             throw error;
         }
     }, []);

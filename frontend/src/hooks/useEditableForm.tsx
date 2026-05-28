@@ -21,7 +21,7 @@ export function useEditableForm<T>(onSave: (data: T) => void, initialValues?: T)
 
             let processedValue: any = value;
             if (type === 'number') processedValue = value === '' ? null : Number(value);
-            
+
             setFormData((prev) => ({ ...prev, [name]: processedValue }));
         },
         []

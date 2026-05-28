@@ -8,7 +8,7 @@ import { prioritys, type TaskPriority } from "@/types/task";
 import { cn } from "@/lib/utils";
 
 interface PriorityIndicatorProps {
-  priority: TaskPriority;
+  priority: string;
   onPriorityChange?: (newPriority: TaskPriority) => void;
 }
 
@@ -53,5 +53,3 @@ export default function PriorityIndicator({ priority, onPriorityChange }: Priori
     </DropdownMenu>
   );
 }
-
-// shrink-0 text-xs px-2 py-1 rounded-full font-medium

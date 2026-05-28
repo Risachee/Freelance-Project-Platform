@@ -5,6 +5,7 @@ import Field from '@/components/ui/Field';
 import { useEditableForm } from '@/hooks/useEditableForm';
 import { useClients } from '@/context/ClientsContext';
 import { Button } from '@/components/ui/button';
+import { useDelete } from '@/hooks/useDelete';
 
 
 const ClientInfo = ({ client }: { client: Client }) => {
@@ -18,7 +19,7 @@ const ClientInfo = ({ client }: { client: Client }) => {
     handleSave,
     handleReset,
   } = useEditableForm<Client>(updateClient, client);
-
+  const { handleDelete } = useDelete(deleteClient, client);
 
   return (
     <div className="rounded-2xl border border-slate-100 bg-slate-50 p-6">
@@ -104,7 +105,7 @@ const ClientInfo = ({ client }: { client: Client }) => {
         className="mt-2"
       />
       <div className="mt-4 mb-3 grid justify-end ">
-        <Button variant='destructive' onClick={() => deleteClient(client)}>
+        <Button variant='destructive' onClick={handleDelete}>
           <Trash2 size={14} />
           Удалить клиента
         </Button>

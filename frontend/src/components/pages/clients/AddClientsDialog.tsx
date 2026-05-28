@@ -104,7 +104,7 @@ export default function AddClientDialog() {
               Отмена
             </Button>
             <Button variant="indigo" onClick={handleSave}>
-              Создать проект
+              Создать клиента
             </Button>
           </div>
         </DialogContent>

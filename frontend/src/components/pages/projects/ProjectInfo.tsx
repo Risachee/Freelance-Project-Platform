@@ -10,6 +10,7 @@ import { useGuestToken } from '@/hooks/useGuestToken';
 import SelectField from '@/components/ui/SelectField';
 import type { Client } from '@/types/client';
 import { Button } from '@/components/ui/button';
+import { useDelete } from '@/hooks/useDelete';
 
 const ProjectInfo = ({ project, clients }: { project: Project; clients: Client[] }) => {
   const { updateProject, deleteProject } = useProjects();
@@ -23,6 +24,7 @@ const ProjectInfo = ({ project, clients }: { project: Project; clients: Client[]
     setFormData,
   } = useEditableForm<Project>(updateProject, project);
 
+  const { handleDelete } = useDelete(deleteProject, project,);
   const { token, isCopied, copyToken } = useGuestToken(project.token || null);
 
   return (
@@ -181,7 +183,7 @@ const ProjectInfo = ({ project, clients }: { project: Project; clients: Client[]
       </div>
 
       <div className="mt-4 mb-3 grid justify-end ">
-        <Button variant='destructive' onClick={() => deleteProject(project)}>
+        <Button variant='destructive' onClick={handleDelete}>
           <Trash2 size={14} />
           Удалить проект
         </Button>

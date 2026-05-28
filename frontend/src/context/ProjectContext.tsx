@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
-import type { Project } from '@/types/project';
+import { type Project } from '@/types/project';
 import { useClients } from './ClientsContext';
 import { useAuth } from './AuthContext';
 import { projectService } from '@/api/projectService';
@@ -96,10 +96,10 @@ export const ProjectProvider = ({ children }: { children: React.ReactNode }) => 
     try {
       const { id, ...data } = updatedProject;
       const refreshed = await projectService.update(id, data);
+
       setProjects((prev) =>
         prev.map((p) => (p.id === id ? refreshed : p))
       );
-      console.log('Проект обновлён:', refreshed);
     } catch (error) {
       console.error('Ошибка при обновлении проекта:', error);
       throw error;

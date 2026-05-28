@@ -1,9 +1,9 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, FolderOpen, Users, Calendar, LogOut } from 'lucide-react';
+import { FolderOpen, Users, Calendar, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext'; 
 
 const navItems = [
-  { to: '/', icon: LayoutDashboard, label: 'Дашборд' },
+  // { to: '/', icon: LayoutDashboard, label: 'Дашборд' },
   { to: '/projects', icon: FolderOpen, label: 'Проекты' },
   { to: '/clients', icon: Users, label: 'Клиенты' },
   { to: '/tasks', icon: Calendar, label: 'Задачи' },
